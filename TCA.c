@@ -68,9 +68,14 @@ void alterarAmigo(int op, int indice);
 void OpcaoExcluirAmigo();
 void excluirAmigo(int indice);
 void op_local();
+void menu_local();
+void OpcaoMenuLocal(int op);
+void incluirLocal();
+TLocal criarLocal();
 // void op_evento();
 // void op_encontro();
 int validarEmail(char *email);
+int validarTelefone(char *telefone);
 int validarData(int dia, int mes, int ano);
 void validaAlocacao(void *ptr);
 
@@ -78,8 +83,9 @@ void validaAlocacao(void *ptr);
 TAmigo *_amigos;
 TLocal *_local;
 TEncontro *_encontros;
-int _numEncontros = 0;
 int _numAmigos = 0;
+int _numLocais = 0;
+int _numEncontros = 0;
 
 int main(){
     int op;
@@ -160,30 +166,10 @@ void menu_relatorios(){
 void OpcaoMenuRelatorio(int op){
     switch(op){
         case 1:
-            // incluirLocal();
-            break;
-        case 2:
-            // incluirLocal();
-            break;
-        case 3:
-            // incluirLocal();
-            break;
-        case 4:
-            break;
-        default:
-            printf("Opcao invalida!\n");
-            system("pause");
-            break;
-    }
-}
-
-void OpcaoMenuRelatorio(int op){
-    switch(op){
-        case 1:
             OpcaoListarAmigo();
             break;
         case 2:
-            // OpcaoListarLocal();
+            OpcaoListarLocal();
             break;
         case 3:
             // OpcaoListarEncontro();
@@ -206,6 +192,7 @@ void op_local(){
 
     menu_local();
     scanf("%d", &op);
+    fflush(stdin);
 
     system("cls");
     OpcaoMenuLocal(op);
@@ -218,6 +205,126 @@ void menu_local(){
     printf("3. Excluir local\n");
     printf("4. Voltar\n\n");
     printf("Digite a opcao: ");
+}
+
+void incluirLocal(){
+    if(_numLocais == 0){
+        _local = (TLocal*)malloc(1 * sizeof(TLocal));
+    } else{
+        _local = (TLocal*)realloc(_local, (_numLocais + 1) * sizeof(TLocal));
+    }
+    _local[_numLocais] = criarLocal();
+    _numLocais++;
+
+    system("cls");
+    printf("Local adcionado com sucesso!\n");
+    system("pause");
+}
+
+TLocal criarLocal(){
+    TLocal local;
+    char strAux[100];
+
+    printf("Digite o nome do local: ");
+    gets(strAux);
+    local.nome = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+    strcpy(local.nome, strAux);
+
+    printf("Digite o logradouro: ");
+    gets(strAux);
+    local.endereco.logradouro = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+    strcpy(local.endereco.logradouro, strAux);
+
+    printf("Digite a cidade: ");
+    gets(strAux);
+    local.endereco.cidade = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+    strcpy(local.endereco.cidade, strAux);
+
+    printf("Digite o bairro: ");
+    gets(strAux);
+    local.endereco.bairro = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+    strcpy(local.endereco.bairro, strAux);
+
+    printf("Digite a rua: ");
+    gets(strAux);
+    local.endereco.rua = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+    strcpy(local.endereco.rua, strAux);
+
+    printf("Digite o numero: ");
+    scanf("%d", &local.endereco.numero);
+    fflush(stdin);
+
+    return local;
+}
+
+void OpcaoAListarLocal(){
+    int op, indice;
+
+    if(_numLocais == 0){
+        printf("** Nenhum local adcionado!!! **\n");
+        system("pause");
+        return;
+    }
+
+    do{
+        menuListarLocal();
+        scanf("%d", &op);
+        fflush(stdin);
+
+        if(op < 1 || op > 3){
+            printf("Opcao invalida!!\n\n");
+        }
+    } while(op < 1 || op > 3);
+    system("cls");
+
+    if(op == 2){
+        do{
+            if(_numLocais > 1){
+                printf("Qual amigo deseja exibir [%d-%d]? ", 1, _numLocais);
+                scanf("%d", &indice);
+                fflush(stdin);
+                indice--;
+            } else{
+                indice = 0;
+            }
+            system("cls");
+            if(indice >= 0 && indice <= _numLocais){
+                printf("-- Lista de Locais [%d] --\n\n", indice + 1);
+                exibeLocal(_local[indice]);
+            } else{
+                printf("Indice invalido!!\n\n");
+            }
+        } while(indice < 1 && indice >= _numLocais);
+    } else if(op == 3){
+        return;
+    } else{
+        listarLocais();
+    }
+    system("pause");
+}
+
+void menuListarLocal(){
+    system("cls");
+    printf("1. Exibir TODOS os amigos\n");
+    printf("2. Exibir APENAS UM amigo\n");
+    printf("3. Voltar\n\n");
+    printf("Digite a opcao: ");
+}
+
+void listarLocais(){
+    printf("-- Lista de locais [%d] --\n\n", _numLocais);
+    for(int i = 0; i < _numLocais; i++){
+        exibeLocal(_local[i]);
+    }
+}
+
+void exibeLocal(TLocal local){
+    printf("Nome: %s\n", local.nome);
+    printf("Logradouro: %s\n", local.endereco.logradouro);
+    printf("Cidade: %s\n", local.endereco.cidade);
+    printf("Bairro: %s\n", local.endereco.bairro);
+    printf("Rua: %s\n", local.endereco.rua);
+    printf("Numero: %d\n\n", local.endereco.numero);
 }
 
 void OpcaoMenuLocal(int op){
@@ -253,10 +360,6 @@ void op_amigo(){
     } while(op != 4);
 }
 
-TLocal incluirLocal(){
-    TLocal local;
-    char strAux[100];
-}
 
 void menu_amigo(){
     system("cls");
@@ -338,10 +441,10 @@ TAmigo criaAmigo(){
         printf("Digite o numero de telefone do amigo: ");
         gets(amigo.telefone);
 
-        if(strlen(amigo.telefone) != 13){
+        if(validarTelefone(amigo.telefone) == 1){
             printf("Numero invalido!\n\n");
         }
-    } while(strlen(amigo.telefone) != 13);
+    } while(validarTelefone(amigo.telefone) == 1);
 
     return amigo;
 }
@@ -358,6 +461,7 @@ void OpcaoListarAmigo(){
     do{
         menuListarAmigo();
         scanf("%d", &op);
+        fflush(stdin);
 
         if(op < 1 || op > 3){
             printf("Opcao invalida!!\n\n");
@@ -370,6 +474,7 @@ void OpcaoListarAmigo(){
             if(_numAmigos > 1){
                 printf("Qual amigo deseja exibir [%d-%d]? ", 1, _numAmigos);
                 scanf("%d", &indice);
+                fflush(stdin);
                 indice--;
             } else{
                 indice = 0;
@@ -485,6 +590,7 @@ void OpcaoAlterarAmigo(){
             listarAmigos();
             printf("Qual amigo deseja alterar [%d-%d]? ", 1, _numAmigos);
             scanf("%d", &indice);
+            fflush(stdin);
             indice--;
 
             if(indice < 0 || indice >= _numAmigos){
@@ -506,7 +612,7 @@ void MenuAlterarAmigo(int indice){
     do{
         printf("-- Lista de amigos[%d] --\n", indice+1);
         exibeAmigo(_amigos[indice]);
-        
+
         printf("Qual atributo deseja alterar?\n");
         printf("1. Nome\n");
         printf("2. Apelido\n");
@@ -543,6 +649,7 @@ void alterarAmigo(int op, int indice){
             do{
                 printf("Digite a nova data de nascimento do amigo: ");
                 scanf("%d%d%d", &_amigos[indice].nasc.dia, &_amigos[indice].nasc.mes, &_amigos[indice].nasc.ano);
+                fflush(stdin);
             } while(validarData(_amigos[indice].nasc.dia, _amigos[indice].nasc.mes, _amigos[indice].nasc.ano) == 0);
             break;
         case 4:
@@ -562,10 +669,10 @@ void alterarAmigo(int op, int indice){
                 printf("Digite o numero de telefone do amigo: ");
                 gets(_amigos[indice].telefone);
 
-                if(strlen(_amigos[indice].telefone) != 13){
+                if(validarTelefone(_amigos[indice].telefone) == 1){
                     printf("Numero invalido!\n\n");
                 }
-            } while(strlen(_amigos[indice].telefone) != 13);
+            } while(validarTelefone(_amigos[indice].telefone) == 1);
             break;
         case 6:
             break;
@@ -589,6 +696,22 @@ int validarEmail(char *email){
     }
 
     if(countA != 1 || countB < 1){
+        x = 1;
+    }
+
+    return x;
+}
+
+int validarTelefone(char *telefone){
+    int count = 0, x = 0, tam = strlen(telefone);
+
+    for(int i = 0; telefone[i] != '\0'; i++){
+        if(isdigit(telefone[i])){
+            count++;
+        }
+    }
+
+    if(count != tam || tam != 13){
         x = 1;
     }
 
