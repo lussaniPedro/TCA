@@ -72,6 +72,10 @@ void menu_local();
 void OpcaoMenuLocal(int op);
 void incluirLocal();
 TLocal criarLocal();
+void menuListarLocal();
+void OpcaoListarLocal();
+void listarLocais();
+void exibeLocal(TLocal local);
 // void op_evento();
 // void op_encontro();
 int validarEmail(char *email);
@@ -190,12 +194,14 @@ void OpcaoMenuRelatorio(int op){
 void op_local(){
     int op;
 
-    menu_local();
-    scanf("%d", &op);
-    fflush(stdin);
+    do{
+        menu_local();
+        scanf("%d", &op);
+        fflush(stdin);
 
-    system("cls");
-    OpcaoMenuLocal(op);
+        system("cls");
+        OpcaoMenuLocal(op);
+    } while(op != 4);
 }
 
 void menu_local(){
@@ -257,7 +263,7 @@ TLocal criarLocal(){
     return local;
 }
 
-void OpcaoAListarLocal(){
+void OpcaoListarLocal(){
     int op, indice;
 
     if(_numLocais == 0){
@@ -305,8 +311,8 @@ void OpcaoAListarLocal(){
 
 void menuListarLocal(){
     system("cls");
-    printf("1. Exibir TODOS os amigos\n");
-    printf("2. Exibir APENAS UM amigo\n");
+    printf("1. Exibir TODOS os locais\n");
+    printf("2. Exibir APENAS UM local\n");
     printf("3. Voltar\n\n");
     printf("Digite a opcao: ");
 }
