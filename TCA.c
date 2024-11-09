@@ -76,6 +76,11 @@ void menuListarLocal();
 void OpcaoListarLocal();
 void listarLocais();
 void exibeLocal(TLocal local);
+void OpcaoExcluirLocal();
+void excluirLocal(int indice);
+void OpcaoAlterarLocal();
+void menuAlterarLocal(int indice);
+void alterarLocal(int op, int indice);
 // void op_evento();
 // void op_encontro();
 int validarEmail(char *email);
@@ -96,7 +101,7 @@ int main(){
 
     do{
         menu();
-        scanf("%d", &op); 
+        scanf("%d", &op);
         fflush(stdin);
 
         system("cls");
@@ -190,7 +195,6 @@ void OpcaoMenuRelatorio(int op){
     }
 }
 
-
 void op_local(){
     int op;
 
@@ -263,6 +267,174 @@ TLocal criarLocal(){
     return local;
 }
 
+void OpcaoAlterarLocal(){
+    int indice;
+
+    if(_numLocais == 0){
+        printf("** Nenhum local cadastrado!!! **\n");
+        system("pause");
+        return;
+    }
+
+    if(_numLocais > 1){
+        do{
+            listarLocais();
+            printf("Qual local deseja alterar [%d-%d]? ", 1, _numLocais);
+            scanf("%d", &indice);
+            fflush(stdin);
+            indice--;
+
+            if(indice < 0 || indice >= _numLocais){
+                printf("Opcao invalida!!\n");
+                system("pause");
+            }
+            system("cls");
+        } while(indice < 0 || indice >= _numLocais);
+    } else{
+        indice = 0;
+    }
+
+    menuAlterarLocal(indice);
+}
+
+void menuAlterarLocal(int indice){
+    int op;
+
+    do{
+        system("cls");
+        printf("-- Lista de locais [%d] --\n", indice);
+        exibeLocal(_local[indice]);
+
+        printf("Digite o atributo a alterar\n");
+        printf("1. Nome\n");
+        printf("2. Logradouro\n");
+        printf("3. Cidade\n");
+        printf("4. Bairro\n");
+        printf("5. Rua\n");
+        printf("6. Numero\n");
+        printf("7. Voltar\n\n");
+        printf("Digite a opcao: ");
+        scanf("%d", &op);
+        fflush(stdin);
+
+        system("cls");
+        alterarLocal(op, indice);
+    } while(op != 7);
+}
+
+void alterarLocal(int op, int indice){
+    char strAux[100];
+
+    switch(op){
+        case 1:
+            printf("Digite o novo nome do local: ");
+            gets(strAux);
+            _local[indice].nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+            strcpy(_local[indice].nome, strAux);
+            break;
+        case 2:
+            printf("Digite o novo logradouro: ");
+            gets(strAux);
+            _local[indice].endereco.logradouro = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+            strcpy(_local[indice].endereco.logradouro, strAux);
+            break;
+        case 3:
+            printf("Digite a nova cidade: ");
+            gets(strAux);
+            _local[indice].endereco.cidade = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+            strcpy(_local[indice].endereco.cidade, strAux);
+            fflush(stdin);
+            break;
+        case 4:
+            printf("Digite o novo bairro: ");
+            gets(strAux);
+            _local[indice].endereco.bairro = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+            strcpy(_local[indice].endereco.bairro, strAux);
+            break;
+        case 5:
+            printf("Digite a nova rua: ");
+            gets(strAux);
+            _local[indice].endereco.rua = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+            strcpy(_local[indice].endereco.rua, strAux);
+            break;
+        case 6:
+            printf("Digite o novo numero: ");
+            scanf("%d", &_local[indice].endereco.numero);
+            break;
+        case 7:
+            return;
+        default:
+            printf("Opcao invalida!!!\n\n");
+            system("pause");
+            break;
+    }
+
+    system("cls");
+    printf("Local alterado com sucesso!\n");
+    system("pause");
+}
+
+void OpcaoExcluirLocal(){
+    int indice;
+    char opSn;
+
+    if(_numLocais == 0){
+        printf("** Nenhum local cadastrado!!! **\n");
+        system("pause");
+        return;
+    }
+
+    if(_numLocais > 1){
+        do{
+            listarLocais();
+            printf("Qual local deseja excluir [%d-%d]? ", 1, _numLocais);
+            scanf("%d", &indice);
+            fflush(stdin);
+            indice--;
+
+            if(indice < 0 || indice >= _numLocais){
+                printf("\nOpcao invalida!!\n");
+                system("pause");
+            }
+            system("cls");
+        } while(indice < 0 || indice >= _numLocais);
+    } else{
+        indice = 0;
+    }
+
+    do{
+        system("cls");
+        exibeLocal(_local[indice]);
+
+        printf("Confirma a exclusao do local[%d] (S/N)? ", indice + 1);
+        scanf("%c", &opSn);
+        fflush(stdin);
+        opSn = tolower(opSn);
+
+        if(opSn != 's' && opSn != 'n'){
+            printf("\nOpcao invalida!!\n");
+            system("pause");
+        }
+    } while(opSn != 's' && opSn != 'n');
+
+    if(opSn == 's'){
+        excluirLocal(indice);
+        _numLocais--;
+    } else{
+        return;
+    }
+
+    system("cls");
+    printf("Local excluido com sucesso!\n");
+    system("pause");    
+}
+
+void excluirLocal(int indice){
+    for(int i = indice; i < _numLocais; i++){
+        _local[i] = _local[i + 1];
+    }
+}
+
 void OpcaoListarLocal(){
     int op, indice;
 
@@ -286,7 +458,7 @@ void OpcaoListarLocal(){
     if(op == 2){
         do{
             if(_numLocais > 1){
-                printf("Qual amigo deseja exibir [%d-%d]? ", 1, _numLocais);
+                printf("Qual local deseja exibir [%d-%d]? ", 1, _numLocais);
                 scanf("%d", &indice);
                 fflush(stdin);
                 indice--;
@@ -339,10 +511,10 @@ void OpcaoMenuLocal(int op){
             incluirLocal();
             break;
         case 2:
-            // OpcaoAlterarLocal();
+            OpcaoAlterarLocal();
             break;
         case 3:
-            // OpcaoExcluirLocal();
+            OpcaoExcluirLocal();
             break;
         case 4:
             break;
@@ -365,7 +537,6 @@ void op_amigo(){
         OpcaoMenuAmigo(op);
     } while(op != 4);
 }
-
 
 void menu_amigo(){
     system("cls");
@@ -569,6 +740,8 @@ void OpcaoExcluirAmigo(){
     if(opSn == 's'){
         excluirAmigo(indice);
         _numAmigos--;
+    } else{
+        return;
     }
 
     system("cls");
@@ -622,7 +795,7 @@ void MenuAlterarAmigo(int indice){
         printf("Qual atributo deseja alterar?\n");
         printf("1. Nome\n");
         printf("2. Apelido\n");
-        printf("3. Data de nascimento\n");
+        printf("3. Nascimento\n");
         printf("4. Email\n");
         printf("5. Numero\n");
         printf("6. Voltar\n\n");
