@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#define TD 13
 
 typedef struct{
     int hora;
@@ -31,12 +32,12 @@ typedef struct{
     char *nome;
     char *apelido;
     char *email;
-    char telefone[13];
+    char telefone[TD];
     TData nasc;
 } TAmigo;
 
 typedef struct{
-    char **nome;
+    char *nome;
 } TCategoria;
 
 typedef struct{
@@ -57,7 +58,7 @@ void op_amigo();
 void menu_amigo();
 void OpcaoMenuAmigo(int op);
 void incluirAmigo();
-TAmigo criaAmigo();
+TAmigo criarAmigo();
 void OpcaoListarAmigo();
 void menuListarAmigo();
 void listarAmigos();
@@ -81,7 +82,17 @@ void excluirLocal(int indice);
 void OpcaoAlterarLocal();
 void menuAlterarLocal(int indice);
 void alterarLocal(int op, int indice);
-// void op_evento();
+void op_categoria();
+void menu_categoria();
+void OpcaoMenuCategoria(int op);
+void incluirCategoria();
+TCategoria criarCategoria();
+void alterarCategoria();
+void menuListarCategoria();
+void listarCategorias();
+void exibeCategoria(TCategoria categoria, int indice);
+void OpcaoExcluirCategoria();
+void excluirCategoria(int indice);
 // void op_encontro();
 int validarEmail(char *email);
 int validarTelefone(char *telefone);
@@ -91,9 +102,11 @@ void validaAlocacao(void *ptr);
 /* Declaração de variáveis globais */
 TAmigo *_amigos;
 TLocal *_local;
+TCategoria *_categoria;
 TEncontro *_encontros;
 int _numAmigos = 0;
 int _numLocais = 0;
+int _numCategorias = 0;
 int _numEncontros = 0;
 
 int main(){
@@ -131,7 +144,7 @@ void op_menu(int op){
             op_local();
             break;
         case 3:
-            // op_categoria();
+            op_categoria();
             break;
         case 4:
             // op_encontro();
@@ -146,6 +159,258 @@ void op_menu(int op){
             printf("Opcao invalida\n");
             system("pause");
             break;
+    }
+}
+
+void op_categoria(){
+    int op;
+
+    do{
+        menu_categoria();
+        scanf("%d", &op);
+        fflush(stdin);
+
+        system("cls");
+        OpcaoMenuCategoria(op);
+    } while(op != 4);
+}
+
+void menu_categoria(){
+    system("cls");
+    printf("1. Incluir categoria\n");
+    printf("2. Alterar categoria\n");
+    printf("3. Excluir categoria\n");
+    printf("4. Voltar\n\n");
+    printf("Digite a opcao: ");
+}
+
+void OpcaoMenuCategoria(int op){
+    switch(op){
+        case 1:
+            incluirCategoria();
+            break;
+        case 2:
+            alterarCategoria();
+            break;
+        case 3:
+            OpcaoExcluirCategoria();
+            break;
+        case 4:
+            break;
+        default:
+            printf("Opcao invalida!\n");
+            system("pause");
+            break;
+    }
+}
+
+void alterarCategoria(){
+    int indice;
+
+    if(_numCategorias == 0){
+        printf("** Nenhum amigo cadastrado!!! **\n");
+        system("pause");
+        return;
+    }
+
+    if(_numCategorias > 1){
+        do{
+            listarCategorias();
+            printf("Qual categoria deseja alterar [%d-%d]? ", 1, _numCategorias);
+            scanf("%d", &indice);
+            fflush(stdin);
+            indice--;
+
+            if(indice < 0 || indice >= _numCategorias){
+                printf("Opcao invalida!!\n");
+                system("pause");
+            }
+            system("cls");
+        } while(indice < 0 || indice >= _numCategorias);
+    } else{
+        indice = 0;
+    }
+
+    exibeCategoria(_categoria[indice], indice+1);
+    _categoria[indice] = criarCategoria();
+
+    system("cls");
+    printf("Categoria alterada com sucesso!\n");
+    system("pause");
+}
+
+void incluirCategoria(){
+    char op;
+
+    while(1){
+        system("cls");
+        if(_numCategorias == 0){
+            _categoria = (TCategoria *)malloc(1 * sizeof(TCategoria));
+        } else{
+            _categoria = (TCategoria *)realloc(_categoria, (_numCategorias + 1) * sizeof(TCategoria));
+        }
+        validaAlocacao(_categoria);
+
+        _categoria[_numCategorias] = criarCategoria();
+        _numCategorias++;
+
+        system("cls");
+        printf("Categoria adcionada com sucesso!\n");
+
+        printf("Deseja adcionar mias uma categoria (S/N)? ");
+        scanf("%c", &op);
+        op = tolower(op);
+        fflush(stdin);
+
+        if(op == 's'){
+            continue;
+        } else if(op == 'n'){
+            break;
+        } else{
+            printf("Opcao invalida!\n");
+            system("pause");
+        }
+        system("pause");
+    }
+}
+
+TCategoria criarCategoria(){
+    char strAux[100];
+    TCategoria categoria;
+
+    printf("Digite o nome da categoria: ");
+    gets(strAux);
+    categoria.nome = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+    strcpy(categoria.nome, strAux);
+
+    return categoria;
+}
+
+void OpcaoListarCategoria(){
+    int op, indice;
+
+    if(_numCategorias == 0){
+        printf("** Nenhuma categoria cadastrada!!! **\n");
+        system("pause");
+        return;
+    }
+
+    do{
+        menuListarCategoria();
+        scanf("%d", &op);
+        fflush(stdin);
+
+        if(op < 1 || op > 3){
+            printf("Opcao invalida!!\n\n");
+        }
+    } while(op < 1 || op > 3);
+    system("cls");
+
+    if(op == 2){
+        do{
+            if(_numCategorias > 1){
+                printf("Qual categoria deseja exibir [%d-%d]? ", 1, _numCategorias);
+                scanf("%d", &indice);
+                fflush(stdin);
+                indice--;
+            } else{
+                indice = 0;
+            }
+            system("cls");
+            if(indice >= 0 && indice <= _numCategorias){
+                printf("-- Lista de categorias [%d] --\n\n", indice + 1);
+                exibeCategoria(_categoria[indice], indice);
+                printf("\n");
+            } else{
+                printf("Indice invalido!!\n\n");
+            }
+        } while(indice < 1 && indice >= _numCategorias);
+    } else if(op == 3){
+        return;
+    } else{
+        listarCategorias();
+    }
+    system("pause");
+}
+
+void listarCategorias(){
+    printf("-- Lista de categorias [%d] --\n\n", _numCategorias);
+    for(int i = 0; i < _numCategorias; i++){
+        exibeCategoria(_categoria[i], i);
+    }
+    printf("\n");
+}
+
+void exibeCategoria(TCategoria categoria, int indice){
+    printf("[%d] - %s\n", indice + 1, categoria.nome);
+}
+
+void menuListarCategoria(){
+    system("cls");
+    printf("1. Exibir TODAS as categorias\n");
+    printf("2. Exibir APENAS UMA categoria\n");
+    printf("3. Voltar\n\n");
+    printf("Digite a opcao: ");
+}
+
+void OpcaoExcluirCategoria(){
+    int indice;
+    char opSn;
+
+    if(_numCategorias == 0){
+        printf("** Nenhuma categoria cadastrada!!! **\n");
+        system("pause");
+        return;
+    }
+
+    if(_numCategorias > 1){
+        do{
+            listarCategorias();
+            printf("Qual categoria deseja excluir [%d-%d]? ", 1, _numCategorias);
+            scanf("%d", &indice);
+            fflush(stdin);
+            indice--;
+
+            if(indice < 0 || indice >= _numCategorias){
+                printf("\nOpcao invalida!!\n");
+                system("pause");
+            }
+            system("cls");
+        } while(indice < 0 || indice >= _numCategorias);
+    } else{
+        indice = 0;
+    }
+
+    do{
+        system("cls");
+        exibeCategoria(_categoria[indice], indice);
+
+        printf("\nConfirma a exclusao do local[%d] (S/N)? ", indice + 1);
+        scanf("%c", &opSn);
+        fflush(stdin);
+        opSn = tolower(opSn);
+
+        if(opSn != 's' && opSn != 'n'){
+            printf("\nOpcao invalida!!\n");
+            system("pause");
+        }
+    } while(opSn != 's' && opSn != 'n');
+
+    if(opSn == 's'){
+        excluirCategoria(indice);
+        _numCategorias--;
+    } else{
+        return;
+    }
+
+    system("cls");
+    printf("Local excluido com sucesso!\n");
+    system("pause");
+}
+
+void excluirCategoria(int indice){
+    for(int i = indice; i < _numCategorias; i++){
+        _categoria[i] = _categoria[i + 1];
     }
 }
 
@@ -168,7 +433,7 @@ void menu_relatorios(){
     printf("2. Listar locais\n");
     printf("3. Listar encontros\n");
     printf("4. Relatorio por categoria\n");
-    printf("5. Sair\n\n");
+    printf("5. Voltar\n\n");
     printf("Digite a opcao: ");
 }
 
@@ -184,7 +449,7 @@ void OpcaoMenuRelatorio(int op){
             // OpcaoListarEncontro();
             break;
         case 4:
-            // OpcaoListarCategoria();
+            OpcaoListarCategoria();
             break;
         case 5:
             break;
@@ -223,6 +488,8 @@ void incluirLocal(){
     } else{
         _local = (TLocal*)realloc(_local, (_numLocais + 1) * sizeof(TLocal));
     }
+    validaAlocacao(_local);
+
     _local[_numLocais] = criarLocal();
     _numLocais++;
 
@@ -426,7 +693,7 @@ void OpcaoExcluirLocal(){
 
     system("cls");
     printf("Local excluido com sucesso!\n");
-    system("pause");    
+    system("pause");
 }
 
 void excluirLocal(int indice){
@@ -575,15 +842,15 @@ void incluirAmigo(){
     }
     validaAlocacao(_amigos);
 
-    _amigos[_numAmigos] = criaAmigo();
+    _amigos[_numAmigos] = criarAmigo();
     _numAmigos++;
 
     system("cls");
-    printf("Amigo adicionado com sucesso!!!\n");
+    printf("Amigo adicionado com sucesso!\n");
     system("pause");
 }
 
-TAmigo criaAmigo(){
+TAmigo criarAmigo(){
     char strAux[100];
     TAmigo amigo;
 
