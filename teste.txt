@@ -1,0 +1,95 @@
+void excluirAmigoDeEncontros(int indiceAmigo) {
+    // Itera sobre todos os encontros
+    for (int i = 0; i < _numEncontros; i++) {
+        TEncontro* encontro = &_encontros[i];
+        int encontrou = 0;
+        
+        // Verifica se o amigo está no encontro
+        for (int j = 0; j < encontro->numAmigos; j++) {
+            if (encontro->amigos[j] == &_amigos[indiceAmigo]) {
+                encontrou = 1;
+                break;
+            }
+        }
+
+        if (encontrou) {
+            // Remove o amigo do encontro
+            for (int k = j; k < encontro->numAmigos - 1; k++) {
+                encontro->amigos[k] = encontro->amigos[k + 1];
+            }
+            encontro->numAmigos--;
+            
+            // Se o encontro tiver apenas esse amigo, o encontro inteiro é excluído
+            if (encontro->numAmigos == 0) {
+                excluirEncontro(i); // Função para excluir o encontro
+                i--; // Ajusta o índice, já que um encontro foi removido
+            }
+        }
+    }
+}
+
+void excluirEncontro(int indice) {
+    for (int i = indice; i < _numEncontros - 1; i++) {
+        _encontros[i] = _encontros[i + 1];
+    }
+    _numEncontros--;  // Decrementa o número de encontros
+}
+
+void OpcaoExcluirAmigo() {
+    int indice;
+    char opSn;
+
+    if (_numAmigos == 0) {
+        printf("** Nenhum amigo cadastrado!!! **\n");
+        system("pause");
+        return;
+    }
+
+    if (_numAmigos > 1) {
+        do {
+            listarAmigos();
+            printf("Qual amigo deseja excluir [%d-%d]? ", 1, _numAmigos);
+            scanf("%d", &indice);
+            fflush(stdin);
+            indice--;
+
+            if (indice < 0 || indice >= _numAmigos) {
+                printf("\nOpcao invalida!!\n");
+                system("pause");
+            }
+            system("cls");
+        } while (indice < 0 || indice >= _numAmigos);
+    } else {
+        indice = 0;
+    }
+
+    do {
+        system("cls");
+        exibeAmigo(_amigos[indice]);
+
+        printf("Confirma a exclusao do amigo[%d] (S/N)? ", indice + 1);
+        scanf("%c", &opSn);
+        fflush(stdin);
+        opSn = tolower(opSn);
+
+        if (opSn != 's' && opSn != 'n') {
+            printf("\nOpcao invalida!!\n");
+            system("pause");
+        }
+    } while (opSn != 's' && opSn != 'n');
+
+    if (opSn == 's') {
+        excluirAmigoDeEncontros(indice);  // Exclui o amigo dos encontros
+
+        // Agora podemos excluir o amigo da lista
+        for (int i = indice; i < _numAmigos - 1; i++) {
+            _amigos[i] = _amigos[i + 1];
+        }
+        _numAmigos--;  // Decrementa o número de amigos
+
+        system("cls");
+        printf("Amigo excluido com sucesso!\n");
+    }
+
+    system("pause");
+}
