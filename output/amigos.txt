@@ -1,19 +1,64 @@
-3
-gggg
-ffff
-12 12 12
-.@..
-5511228001366
-0
+9
 Pedro
-aaaa
+None
 19 9 2009
-p.henriquelussani@gmail.com
+pedro.lussani@outlook.com
 5541991698740
+0
+
+Benicio
+BeniBeni
+12 2 2009
+beniio_reidelas69@hotmail.com
+5541997236801
 1
-vvvv
-ccccc
-11 11 11
-@.com.
-8821599111870
+
+Nathan
+Jimmy
+17 12 2009
+JimmyXNSPggC@gmail.com
+5541921134200
 2
+
+Yago
+Yagozadinha
+7 6 2009
+littlemilk663@gmail.com
+5541916738201
+3
+
+Gabriel
+Gaybriels
+4 11 2009
+brielsgay101@outlook.com
+5541993378021
+4
+
+Arthur
+Maconheiro
+6 10 2008
+gaziri.canabis@outlook.com
+5541998732111
+5
+
+Nycollas
+Grelo
+28 12 2009
+grelo.Math@ifpr.edu.br
+5541926378218
+6
+
+Caroline
+Carol
+4 1 2009
+freitas.carol@yahoo.com
+5541984625464
+7
+
+Miguel
+None
+16 8 2008
+miguel.1234@ava.com
+8
+50397953
+

@@ -1,9 +1,33 @@
-1
-15 2 2025
+2
+17 2 2025
 17 30
+4
+Benicio BeniBeni
+Nathan jimmy
+Gabriel Gaybriels
+Yago Yagozadinha
+
+Cinema
 2
-benicio BeniBeni nathan jimmy 
-Barco
+Cinema
 2
-jantar negocios 
-Jantar
+Resenha
+3
+
+Assistir sonic 3 (Vestido a carater) com os guri
+
+5 1 2025
+15 0
+4
+Arthur Maconheiro
+Nathan Jimmy
+Nycollas Grelo
+Miguel None
+
+Cabare
+1
+Resenha
+3
+
+Resenha com os guardioes
+

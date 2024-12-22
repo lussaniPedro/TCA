@@ -1,13 +1,10 @@
-6
-Jantar
-0
-Almo‡o
-1
-jjjj
-2
-hhhttt
-3
-ttytt
 4
-oooo
-5
+Jantar
+0 0
+Almoco
+1 0
+Cinema
+2 1
+Resenha
+3 2
+
