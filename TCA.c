@@ -4,9 +4,13 @@
 #include <ctype.h>
 #include <windows.h>
 #include <unistd.h>
-#define TD 13
+#include <conio.h>
 
-/* Declaração de structs */
+#define TD 13
+#define CLS (_WIN32 ? system("cls") : system("clear"));
+#define SPAUSE printf("Pressione qualquer tecla para continuar. . ."); getch();
+
+/* <Declaração de structs> */
 typedef struct
 {
     int hora;
@@ -54,7 +58,7 @@ typedef struct
 
 typedef struct
 {
-    TAmigo *amigos;
+    TAmigo **amigos;
     int numAmigos;
     TCategoria *categorias;
     int numCategorias;
@@ -63,60 +67,61 @@ typedef struct
     TLocal local;
     char *descricao;
 } TEncontro;
+/* <\Declaração de structs> */
 
-/* Declaração de funções */
+/* <Declaração de funções> */
 /* Principal e papagaiadas */
-void menu();                        // Exibe o menu principal
-void op_menu(int op);               // Dispara a opção do menu incial
-void salvarDados();                 // Salva os dados em arquivo
-void carregarDados();               // Carrega os dados em arquivo
-void limparMemoria();               // Limpa a memória dos ponteiros
-void digitarTitulo();               // Digita o titulo do programa de forma meio gay
-void mensagemError(int codigoErro); // Exibe uma mensagem de erro
+void menu();                                          // Exibe o menu principal
+void op_menu(int op);                                 // Dispara a opção do menu incial
+void enviaDados();                                    // Envia os dados para o arquivo
+void carregarDados();                                 // Carrega os dados em arquivo
+void limparMemoria();                                 // Limpa a memória dos ponteiros
+void digitarTitulo();                                 // Digita o titulo do programa
+void mensagemError(int codigoErro);                   // Exibe uma mensagem de erro
 
 /* Relatórios */
-void menu_relatorios();          // Exibe o menu de relatórios
-void op_relatorios();            // Dispara a função do menu de relatórios
-void OpcaoMenuRelatorio(int op); // Dispara a opção do menu de relatórios
+void menu_relatorios();                                // Exibe o menu de relatórios
+void op_relatorios();                                  // Dispara a função do menu de relatórios
+void OpcaoMenuRelatorio(int op);                       // Dispara a opção do menu de relatórios
 
 /* Manter amigo */
-void op_amigo();                           // Dispara a função do menu de amigos
-void menu_amigo();                         // Exibe o menu de amigos
-void OpcaoMenuAmigo(int op);               // Dispara a opção do menu de amigos
-void incluirAmigo();                       // Dispara a função para criar um amigo
-TAmigo criarAmigo();                       // Cria amigos
-void OpcaoListarAmigo();                   // Dispara a opção de listar amigos
-void menuListarAmigo();                    // Exibe o menu para listar amigos
-void listarAmigos();                       // Lista todos os amigos
-void exibeAmigo(TAmigo amigo, int indice); // Exibe um amigo
-void OpcaoAlterarAmigo();                  // Dispara a opção para alterar amigo
-void MenuAlterarAmigo(int indice);         // Exibe o menu de alteração de amigo
-void alterarAmigo(int op, int indice);     // Altera um atributo de um amigo
-void OpcaoExcluirAmigo();                  // Dispara a opção para excluir um amigo
-void excluirAmigo(int indice);             // Exclui um amigo
-void excluirAmigoDeEncontros(int indice);  // Exclui um amigo de todos os encontros
-void limparAmigos();                       // Limpa a memória dos amigos alocados
-void salvarAmigos();                       // Salva os amigos em arquivo
-void carregarAmigos();                     // carrega os amigos em arquivo
+void op_amigo();                                       // Dispara a função do menu de amigos
+void menu_amigo();                                     // Exibe o menu de amigos
+void OpcaoMenuAmigo(int op);                           // Dispara a opção do menu de amigos
+void incluirAmigo();                                   // Dispara a função para criar um amigo
+TAmigo criarAmigo();                                   // Cria amigos
+void OpcaoListarAmigo();                               // Dispara a opção de listar amigos
+void menuListarAmigo();                                // Exibe o menu para listar amigos
+void listarAmigos();                                   // Lista todos os amigos
+void exibeAmigo(TAmigo amigo, int indice);             // Exibe um amigo
+void OpcaoAlterarAmigo();                              // Dispara a opção para alterar amigo
+void MenuAlterarAmigo(int indice);                     // Exibe o menu de alteração de amigo
+void alterarAmigo(int op, int indice);                 // Altera um atributo de um amigo
+void OpcaoExcluirAmigo();                              // Dispara a opção para excluir um amigo
+void excluirAmigo(int indice);                         // Exclui um amigo
+void excluirAmigoDeEncontros(int indice);              // Exclui um amigo de todos os encontros
+void limparAmigos();                                   // Limpa a memória dos amigos alocados
+void salvarAmigos();                                   // Salva os amigos em arquivo
+void carregarAmigos();                                 // carrega os amigos em arquivo
 
 /* Manter local */
-void op_local();                       // Dispara a função do menu de locais
-void menu_local();                     // Exibe o menu de locais
-void OpcaoMenuLocal(int op);           // Dispara a opção do menu de locais
-void incluirLocal();                   // Dispara a função para criar um local
-TLocal criarLocal();                   // Cria um local
-void menuListarLocal();                // Exibe o menu para listar locais
-void OpcaoListarLocal();               // Dispara a opção para listar locais
-void listarLocais();                   // Lista todos os locais
-void exibeLocal(TLocal local);         // Exibe um local
-void OpcaoExcluirLocal();              // Dispara a opção para excluir um local
-void excluirLocal(int indice);         // Exclui um local
-void OpcaoAlterarLocal();              // Dispara a opção para alterar um local
-void menuAlterarLocal(int indice);     // Exibe o menu de alteração de local
-void alterarLocal(int op, int indice); // Altera um atributo de um local
-void limparLocais();                   // Limpa a memória dos locais alocados
-void salvarLocais();                   // Salva os locais em arquivo
-void carregarLocais();                 // carrega os locais em arquivo
+void op_local();                                       // Dispara a função do menu de locais
+void menu_local();                                     // Exibe o menu de locais
+void OpcaoMenuLocal(int op);                           // Dispara a opção do menu de locais
+void incluirLocal();                                   // Dispara a função para criar um local
+TLocal criarLocal();                                   // Cria um local
+void menuListarLocal();                                // Exibe o menu para listar locais
+void OpcaoListarLocal();                               // Dispara a opção para listar locais
+void listarLocais();                                   // Lista todos os locais
+void exibeLocal(TLocal local);                         // Exibe um local
+void OpcaoExcluirLocal();                              // Dispara a opção para excluir um local
+void excluirLocal(int indice);                         // Exclui um local
+void OpcaoAlterarLocal();                              // Dispara a opção para alterar um local
+void menuAlterarLocal(int indice);                     // Exibe o menu de alteração de local
+void alterarLocal(int op, int indice);                 // Altera um atributo de um local
+void limparLocais();                                   // Limpa a memória dos locais alocados
+void salvarLocais();                                   // Salva os locais em arquivo
+void carregarLocais();                                 // carrega os locais em arquivo
 
 /* Manter categorias */
 void op_categoria();                                   // Dispara a função do menu de categorias
@@ -136,39 +141,44 @@ void salvarCategorias();                               // Salva os categorias em
 void carregarCategorias();                             // carrega os categorias em arquivo
 
 /* Manter encontro */
-void op_encontro();                                  // Dispara a função do menu de encontros
-void menu_encontro();                                // Exibe o menu de encontros
-void OpcaoMenuEncontro(int op);                      // Dispara a opção do menu de encontros
-void incluirEncontro();                              // Dispara a função para criar um encontro
-TEncontro criarEncontro();                           // Cria um encontro
-void OpcaoAlterarEncontro();                         // Dispara a opção para alterar encontro
-void MenuAlterarEncontro(int indice);                // Exibe o menu de alteração de encontros
-void alterarEncontro(int op, int indice);            // Altera um encontro
-void MenuAlterarAtributo(int indice, int i);         // Exibe o menu para alterar um atributo do encontro
-void OpAlterarAmigosDeEncontros(int op, int indice); // Dispara a opção para alterar amigos de um encontro
-void incluirAmigosDeEncontros(int indice);           // Inclui amigos em um encontro
-void OpcaoListarEncontro();                          // Dispara a função para listar encontros
-void menuListarEncontro();                           // Exibe o menu para listar encontros
-void listarEncontros();                              // Lista todos os encontros
-void exibeEncontro(TEncontro encontro, int i);       // Exibe um encontro
-int menuListarEncontroPorCategoria();                // Exibe o menu para listar encontros por categoria
-void OpListarEncontroPorCategoria();                 // Dispara a função para listar encontros por categoria
-void listarEncontrosPorCategoria();                  // Lista todos os encontros por categoria
-void relatorioPorCategoria(int indice);              // Relatório de encontros por categoria
-void OpcaoExcluirEncontro();                         // Dispara a opção para excluir um encontro
-void excluirEncontro(int indice);                    // Exclui um encontro
-void limparEncontros();                              // Limpa a memória dos encontros alocados
-void salvarEncontros();                              // Salva os encontros em arquivo
-void carregarEncontros();                            // carrega os encontros em arquivo
+void op_encontro();                                    // Dispara a função do menu de encontros
+void menu_encontro();                                  // Exibe o menu de encontros
+void OpcaoMenuEncontro(int op);                        // Dispara a opção do menu de encontros
+void incluirEncontro();                                // Dispara a função para criar um encontro
+TEncontro criarEncontro();                             // Cria um encontro
+void OpcaoAlterarEncontro();                           // Dispara a opção para alterar encontro
+void MenuAlterarEncontro(int indice);                  // Exibe o menu de alteração de encontros
+void alterarEncontro(int op, int indice);              // Altera um encontro
+void MenuAlterarAtributo(int indice, int i);           // Exibe o menu para alterar um atributo do encontro
+void OpAlterarAmigosDeEncontros(int op, int indice);   // Dispara a opção para alterar amigos de um encontro
+void OpExcluirAmigoDeEncontro(int indice);             // Dispara a opção para excluir um amigo de um encontro
+void excluirAmigoDeEncontro(int index,int indice);     // Exclui um amigo de um encontro
+void listarAmigosDeEncontros(int indice);              // Lista todos os amigos de um encontro
+void incluirAmigosDeEncontros(int indice);             // Inclui amigos em um encontro
+void alterarAmigosDeEncontros(int indice);             // Altera amigos de um encontro
+void OpcaoListarEncontro();                            // Dispara a função para listar encontros
+void menuListarEncontro();                             // Exibe o menu para listar encontros
+void listarEncontros();                                // Lista todos os encontros
+void exibeEncontro(TEncontro encontro, int i);         // Exibe um encontro
+int menuListarEncontroPorCategoria();                  // Exibe o menu para listar encontros por categoria
+void OpListarEncontroPorCategoria();                   // Dispara a função para listar encontros por categoria
+void listarEncontrosPorCategoria();                    // Lista todos os encontros por categoria
+void relatorioPorCategoria(int indice);                // Relatório de encontros por categoria
+void OpcaoExcluirEncontro();                           // Dispara a opção para excluir um encontro
+void excluirEncontro(int indice);                      // Exclui um encontro
+void limparEncontros();                                // Limpa a memória dos encontros alocados
+void salvarEncontros();                                // Salva os encontros em arquivo
+void carregarEncontros();                              // carrega os encontros em arquivo
 
 /* Validações */
-int validarEmail(char *email);              // Valida um e-mail
-int validarTelefone(char *telefone);        // Valida um número de telefone
-int validarData(int dia, int mes, int ano); // Valida dia mês e ano
-int validarHorario(int hora, int min);      // Valida hora e minuto
-void validaAlocacao(void *ptr);             // Valida a alocação dinâmica
+int validarEmail(char *email);                         // Valida um e-mail
+int validarTelefone(char *telefone);                   // Valida um número de telefone
+int validarData(int dia, int mes, int ano);            // Valida dia mês e ano
+int validarHorario(int hora, int min);                 // Valida hora e minuto
+void validaAlocacao(void *ptr);                        // Valida a alocação dinâmica
+/* <\Declaração de funções> */
 
-/* Declaração de variáveis globais */
+/* <Declaração de variáveis globais> */
 TAmigo *_amigos;
 int _numAmigos = 0;
 
@@ -180,7 +190,9 @@ int _numCategorias = 0;
 
 TEncontro *_encontros;
 int _numEncontros = 0;
+/* <\Declaração de variáveis globais> */
 
+/* <PRINCIPAL */
 int main()
 {
     int op;
@@ -193,26 +205,30 @@ int main()
         scanf("%d", &op);
         fflush(stdin);
 
-        system("cls");
+        CLS
         op_menu(op);
     } while (op != 6);
 
-    salvarDados();
+    enviaDados();
     limparMemoria();
     return 0;
 }
 
 void menu()
 {
-    system("cls");
-    printf("-- Lista de Encontros -- \n");
+    CLS
+    printf("-- Lista de Encontros --\n\n");
+
+    printf("------------------------\n");
     printf("- (1) Manter amigos\n");
     printf("- (2) Manter local\n");
     printf("- (3) Manter categoria\n");
     printf("- (4) Manter encontros\n");
     printf("- (5) Relatorios\n");
-    printf("- (6) Sair\n\n");
-    printf("Digite a opcao: ");
+    printf("- (6) Sair\n");
+    printf("------------------------\n\n");
+
+    printf("** Digite a opcao: ");
 }
 
 void op_menu(int op)
@@ -235,7 +251,7 @@ void op_menu(int op)
         op_relatorios();
         break;
     case 6:
-        system("cls");
+        CLS
         printf("Saindo");
         for (int i = 0; i < 3; i++)
         {
@@ -249,6 +265,37 @@ void op_menu(int op)
     }
 }
 
+void digitarTitulo()
+{
+    char *palavra = "Hello World!";
+
+    CLS
+    for (int i = 0; palavra[i] != '\0'; i++)
+    {
+        printf("%c", palavra[i]);
+        Sleep(70);
+    }
+    Sleep(700);
+
+    for (int i = 0; i < 12; i++)
+    {
+        printf("\b \b");
+        Sleep(70);
+    }
+    Sleep(700);
+
+    palavra = "-- Lista de Encontros --";
+    CLS
+    for (int i = 0; palavra[i] != '\0'; i++)
+    {
+        printf("%c", palavra[i]);
+        Sleep(70);
+    }
+    printf("\n");
+}
+/* <\PRINCIPAL> */
+
+/* <RELATORIOS */
 void op_relatorios()
 {
     int op;
@@ -258,14 +305,14 @@ void op_relatorios()
         menu_relatorios();
         scanf("%d", &op);
 
-        system("cls");
+        CLS
         OpcaoMenuRelatorio(op);
     } while (op != 6);
 }
 
 void menu_relatorios()
 {
-    system("cls");
+    CLS
     printf("-- Relatorios --\n");
     printf("- (1) Listar amigos\n");
     printf("- (2) Listar local\n");
@@ -273,11 +320,12 @@ void menu_relatorios()
     printf("- (4) Listar encontros\n");
     printf("- (5) Relatorio por categoria\n");
     printf("- (6) Voltar ao menu anterior\n\n");
-    printf("Digite a opcao: ");
+    printf("** Digite a opcao: ");
 }
 
 void OpcaoMenuRelatorio(int op)
 {
+    CLS
     switch (op)
     {
     case 1:
@@ -302,7 +350,9 @@ void OpcaoMenuRelatorio(int op)
         break;
     }
 }
+/* <\RELATORIOS> */
 
+/* <ENCONTROS> */
 void op_encontro()
 {
     int op;
@@ -313,20 +363,20 @@ void op_encontro()
         scanf("%d", &op);
         fflush(stdin);
 
-        system("cls");
+        CLS
         OpcaoMenuEncontro(op);
     } while (op != 4);
 }
 
 void menu_encontro()
 {
-    system("cls");
+    CLS
     printf("-- Manter encontro --\n");
     printf("- (1) Incluir encontro\n");
     printf("- (2) Alterar encontro\n");
     printf("- (3) Excluir encontro\n");
     printf("- (4) Voltar\n\n");
-    printf("Digite a opcao: ");
+    printf("** Digite a opcao: ");
 }
 
 void OpcaoMenuEncontro(int op)
@@ -371,9 +421,9 @@ void incluirEncontro()
     _encontros[_numEncontros] = criarEncontro();
     _numEncontros++;
 
-    system("cls");
+    CLS
     printf("Encontro adcionado com sucesso!\n");
-    system("pause");
+    SPAUSE
 }
 
 TEncontro criarEncontro()
@@ -414,7 +464,7 @@ TEncontro criarEncontro()
 
         for (int i = 0; i < encontro.numAmigos; i++)
         {
-            if (encontro.amigos[i].id == _amigos[indice].id)
+            if (encontro.amigos[i]->id == _amigos[indice].id)
             {
                 mensagemError(-20);
                 aux = 1;
@@ -429,15 +479,15 @@ TEncontro criarEncontro()
 
         if (encontro.numAmigos == 0)
         {
-            encontro.amigos = (TAmigo *)malloc(1 * sizeof(TAmigo));
+            encontro.amigos = (TAmigo **)malloc(1 * sizeof(TAmigo*));
         }
         else
         {
-            encontro.amigos = (TAmigo *)realloc(encontro.amigos, (encontro.numAmigos + 1) * sizeof(TAmigo));
+            encontro.amigos = (TAmigo **)realloc(encontro.amigos, (encontro.numAmigos + 1) * sizeof(TAmigo*));
         }
         validaAlocacao(encontro.amigos);
 
-        encontro.amigos[encontro.numAmigos] = _amigos[indice];
+        encontro.amigos[encontro.numAmigos] = &_amigos[indice];
         encontro.numAmigos++;
 
         if (encontro.numAmigos == _numAmigos)
@@ -558,7 +608,7 @@ TEncontro criarEncontro()
         }
     }
 
-    system("cls");
+    CLS
     printf("Digite a descricao do encontro: ");
     gets(strAux);
     encontro.descricao = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
@@ -591,7 +641,7 @@ void OpcaoAlterarEncontro()
             {
                 mensagemError(-9);
             }
-            system("cls");
+            CLS
         } while (indice < 0 || indice >= _numEncontros);
     }
     else
@@ -609,8 +659,9 @@ int menuListarEncontroPorCategoria()
     do
     {
         printf("- (1) Listar os encontros de TODAS as categorias\n");
-        printf("- (2) Listar os encontros de UMA categoria\n");
-        printf("- (3) Voltar\n");
+        printf("- (2) Listar os encontros de APENAS UMA categoria\n");
+        printf("- (3) Voltar ao menu anterior\n\n");
+        printf("** Digite a opcao: ");
         scanf("%d", &op);
         fflush(stdin);
 
@@ -619,7 +670,7 @@ int menuListarEncontroPorCategoria()
             mensagemError(-9);
         }
     } while (op < 1 || op > 3);
-    system("cls");
+    CLS
 
     return op;
 }
@@ -670,27 +721,29 @@ void OpListarEncontroPorCategoria()
     }
 
     relatorioPorCategoria(indice);
-    system("pause");
+    SPAUSE
 }
 
 void listarEncontrosPorCategoria()
 {
+    printf("-- Relatorio de encontros por categoria --\n\n");
     for (int i = 0; i < _numCategorias; i++)
     {
         relatorioPorCategoria(i);
+        printf("-------------------------------------------\n\n");
     }
-    system("pause");
+    SPAUSE
 }
 
 void relatorioPorCategoria(int indice)
 {
     if (_categorias[indice].numEncontros == 0)
     {
-        printf("Categoria[%d - %s]: Ha %d encontros nesta categoria;\n\n", indice + 1, _categorias[indice].nome, _categorias[indice].numEncontros);
+        printf("Categoria [%d - %s]: Ha %d encontros nesta categoria.\n\n", indice + 1, _categorias[indice].nome, _categorias[indice].numEncontros);
     }
     else
     {
-        printf("Categoria[%d - %s]: Ha %d encontros nesta categoria: {\n", indice + 1, _categorias[indice].nome, _categorias[indice].numEncontros);
+        printf("Categoria [%d - %s]: Ha %d encontros nesta categoria:\n\n", indice + 1, _categorias[indice].nome, _categorias[indice].numEncontros);
         for (int i = 0; i < _numEncontros; i++)
         {
             for (int j = 0; j < _encontros[i].numCategorias; j++)
@@ -698,11 +751,9 @@ void relatorioPorCategoria(int indice)
                 if (_encontros[i].categorias[j].id == _categorias[indice].id)
                 {
                     exibeEncontro(_encontros[i], i + 1);
-                    printf("\n");
                 }
             }
         }
-        printf("}\n\n");
     }
 }
 
@@ -723,12 +774,12 @@ void MenuAlterarEncontro(int indice)
         printf("- (5) Categorias\n");
         printf("- (6) Descricao\n");
         printf("- (7) Voltar para o menu anterior\n\n");
-        printf("Digite a opcao: ");
+        printf("** Digite a opcao: ");
         scanf("%d", &op);
         fflush(stdin);
 
         alterarEncontro(op, indice);
-        system("cls");
+        CLS
     } while (op != 7);
 }
 
@@ -760,7 +811,7 @@ void alterarEncontro(int op, int indice)
             printf("Onde vai ser o novo local[%d-%d]? ", 1, _numLocais);
             scanf("%d", &index);
             fflush(stdin);
-            system("cls");
+            CLS
 
             if (index < 1 || index > _numLocais)
             {
@@ -784,9 +835,9 @@ void alterarEncontro(int op, int indice)
         return;
     }
 
-    system("cls");
+    CLS
     printf("Encontro alterado com sucesso\n");
-    system("pause");
+    SPAUSE
 }
 
 void MenuAlterarAtributo(int indice, int i)
@@ -798,26 +849,26 @@ void MenuAlterarAtributo(int indice, int i)
         switch (i)
         {
         case 1:
-            system("cls");
+            CLS
             printf("- (1) Incluir amigo\n");
             printf("- (2) Alterar amigos\n");
             printf("- (3) Excluir amigos\n");
             printf("- (4) Listar amigos\n");
             printf("- (5) Voltar\n\n");
-            printf("Digite a opcao: ");
+            printf("** Digite a opcao: ");
             scanf("%d", &op);
             fflush(stdin);
 
             OpAlterarAmigosDeEncontros(op, indice);
             break;
         case 2:
-            system("cls");
+            CLS
             printf("- (1) Incluir categoria\n");
             printf("- (2) Alterar categoria\n");
             printf("- (3) Excluir categoria\n");
             printf("- (4) Listar categorias\n");
             printf("- (5) Voltar\n\n");
-            printf("Digite a opcao: ");
+            printf("** Digite a opcao: ");
             scanf("%d", &op);
             fflush(stdin);
 
@@ -832,20 +883,20 @@ void MenuAlterarAtributo(int indice, int i)
 
 void OpAlterarAmigosDeEncontros(int op, int indice)
 {
-    system("cls");
+    CLS
     switch (op)
     {
     case 1:
         incluirAmigosDeEncontros(indice);
         break;
     case 2:
-        // alterarAmigosDeEncontros(indice);
+        alterarAmigosDeEncontros(indice);
         break;
     case 3:
-        // excluirAmigosDeEncontros(indice);
+        OpExcluirAmigoDeEncontro(indice);
         break;
     case 4:
-        // listarAmigosDeEncontros(indice);
+        listarAmigosDeEncontros(indice);
         break;
     case 5:
         break;
@@ -853,6 +904,70 @@ void OpAlterarAmigosDeEncontros(int op, int indice)
         mensagemError(-9);
         break;
     }
+}
+
+void alterarAmigosDeEncontros(int indice){
+    int index, id;
+    char op;
+
+    if(_encontros[indice].numAmigos == _numAmigos){
+        mensagemError(-19);
+        return;
+    }
+
+    while(1){
+        if(_encontros[indice].numAmigos > 1){
+            listarAmigosDeEncontros(indice);
+            printf("Qual amigo deseja alterar ao encontro [%d-%d]? ", 1, _numAmigos);
+            scanf("%d", &index);
+            fflush(stdin);
+            index--;
+
+            if (index < 0 || index >= _numAmigos)
+            {
+                mensagemError(-10);
+                continue;
+            }
+        } else{
+            index = 0;
+        }
+
+        do{
+            CLS
+            listarAmigos();
+            printf("Qual amigo deseja adcionar ao encontro [%d-%d]? ", 1, _numAmigos);
+            scanf("%d", &id);
+            fflush(stdin);
+            id--;
+
+            for(int i = 0; i < _encontros[indice].numAmigos; i++){
+                if(_encontros[indice].amigos[i]->id == _amigos[id].id){
+                    mensagemError(-11);
+                    break;
+                }
+            }
+
+            if(id < 0 || id >= _numAmigos){
+                mensagemError(-10);
+            }
+        } while(id < 0 || id >= _numAmigos);
+
+        printf("Deseja realmente subistituir o amigo %s pelo amigo %s? (s/n) ", _amigos[index].nome, _amigos[id].nome);
+        scanf("%c", &op);
+        fflush(stdin);
+        op = tolower(op);
+
+        if(op == 's'){
+            _encontros[indice].amigos[index] = &_amigos[id];
+            break;
+        } else if(op == 'n'){
+            return;
+        }
+    }
+
+    CLS
+    printf("Amigo alterado com sucesso!!!\n");
+    SPAUSE
 }
 
 void incluirAmigosDeEncontros(int indice)
@@ -884,17 +999,17 @@ void incluirAmigosDeEncontros(int indice)
 
         for (int i = 0; i < _encontros[indice].numAmigos; i++)
         {
-            if (_encontros[indice].amigos[i].id == _amigos[index].id)
+            if (_encontros[indice].amigos[i]->id == _amigos[index].id)
             {
                 mensagemError(-20);
                 return;
             }
         }
 
-        _encontros[indice].amigos = (TAmigo *)realloc(_encontros[indice].amigos, (_encontros[indice].numAmigos + 1) * sizeof(TAmigo));
+        _encontros[indice].amigos = (TAmigo **)realloc(_encontros[indice].amigos, (_encontros[indice].numAmigos + 1) * sizeof(TAmigo*));
         validaAlocacao(_encontros[indice].amigos);
 
-        _encontros[indice].amigos[_encontros[indice].numAmigos] = _amigos[index];
+        _encontros[indice].amigos[_encontros[indice].numAmigos] = &_amigos[index];
         _encontros[indice].numAmigos++;
 
         if (_encontros[indice].numAmigos == _numAmigos)
@@ -925,17 +1040,59 @@ void incluirAmigosDeEncontros(int indice)
         }
     }
 
-    system("cls");
+    CLS
     printf("Amigos adicionados com sucesso\n");
-    system("pause");
+    SPAUSE
 }
 
 void listarAmigosDeEncontros(int indice)
 {
     for (int i = 0; i < _encontros[indice].numAmigos; i++)
     {
-        printf("[%d] - %s (%s)\n", i + 1, _encontros[indice].amigos[i].nome, _encontros[indice].amigos[i].apelido);
+        printf("[%d] - %s (%s)\n", i + 1, _encontros[indice].amigos[i]->nome, _encontros[indice].amigos[i]->apelido);
     }
+    SPAUSE
+}
+
+void OpExcluirAmigoDeEncontro(int indice)
+{
+    int index;
+
+    if (_encontros[indice].numAmigos > 0)
+    {
+        do
+        {
+            listarAmigosDeEncontros(indice);
+            printf("Qual amigo deseja excluir [%d-%d]? ", 1, _encontros[indice].numAmigos);
+            scanf("%d", &index);
+            fflush(stdin);
+            index--;
+
+            if (index < 0 || index >= _encontros[indice].numAmigos)
+            {
+                mensagemError(-10);
+            }
+        } while (index < 0 || index >= _encontros[indice].numAmigos);
+    }
+    else
+    {
+        index = 0;
+    }
+
+    excluirAmigoDeEncontro(index, indice);
+
+    CLS
+    printf("Amigo excluido com sucesso\n");
+    SPAUSE
+}
+
+void excluirAmigoDeEncontro(int index, int indice)
+{
+    for (int i = index; i < _encontros[indice].numAmigos; i++)
+    {
+        _encontros[indice].amigos[i] = _encontros[indice].amigos[i + 1];
+    }
+    _encontros[indice].numAmigos--;
 }
 
 void OpcaoListarEncontro()
@@ -961,12 +1118,12 @@ void OpcaoListarEncontro()
                 mensagemError(-9);
             }
         } while (op < 1 || op > 3);
-        system("cls");
+        CLS
 
         if (op == 1)
         {
             listarEncontros();
-            system("pause");
+            SPAUSE
         }
         else if (op == 2)
         {
@@ -977,12 +1134,12 @@ void OpcaoListarEncontro()
                 fflush(stdin);
                 indice--;
 
-                system("cls");
+                CLS
                 if (indice >= 0 && indice <= _numEncontros)
                 {
                     printf("-- Lista de Encontros [%d] --\n\n", indice + 1);
                     exibeEncontro(_encontros[indice], indice + 1);
-                    system("pause");
+                    SPAUSE
                 }
                 else
                 {
@@ -1003,16 +1160,16 @@ void OpcaoListarEncontro()
 
 void menuListarEncontro()
 {
-    system("cls");
+    CLS
     printf("1. Listar TODOS os encontros\n");
     printf("2. Listar APENAS UM encontro\n");
     printf("3. Voltar\n\n");
-    printf("Digite a opcao: ");
+    printf("** Digite a opcao: ");
 }
 
 void listarEncontros()
 {
-    system("cls");
+    CLS
     printf("-- Lista de encontros [%d] --\n\n", _numEncontros);
     for (int i = 0; i < _numEncontros; i++)
     {
@@ -1023,9 +1180,9 @@ void listarEncontros()
 
 void exibeEncontro(TEncontro encontro, int i)
 {
-    printf("\tEncontro[%d]\n", i);
-    printf("\tLocal: %s\n", encontro.local.nome);
-    printf("\tCategorias: ");
+    printf("Encontro[%d]\n", i);
+    printf("Local: %s\n", encontro.local.nome);
+    printf("Categorias: ");
     for (int j = 0; j < encontro.numCategorias; j++)
     {
         if (j < encontro.numCategorias - 1)
@@ -1037,21 +1194,21 @@ void exibeEncontro(TEncontro encontro, int i)
             printf("%s\n", encontro.categorias[j].nome);
         }
     }
-    printf("\tAmigos: ");
+    printf("Amigos: ");
     for (int k = 0; k < encontro.numAmigos; k++)
     {
         if (k < encontro.numAmigos - 1)
         {
-            printf("%s (%s), ", encontro.amigos[k].nome, encontro.amigos[k].apelido);
+            printf("%s (%s), ", encontro.amigos[k]->nome, encontro.amigos[k]->apelido);
         }
         else
         {
-            printf("%s (%s)\n", encontro.amigos[k].nome, encontro.amigos[k].apelido);
+            printf("%s (%s)\n", encontro.amigos[k]->nome, encontro.amigos[k]->apelido);
         }
     }
-    printf("\tData: %.2d/%.2d/%d\n", encontro.data.dia, encontro.data.mes, encontro.data.ano);
-    printf("\tHorario: %d:%.2d\n", encontro.horario.hora, encontro.horario.min);
-    printf("\tDescricao: %s\n", encontro.descricao);
+    printf("Data: %.2d/%.2d/%d\n", encontro.data.dia, encontro.data.mes, encontro.data.ano);
+    printf("Horario: %d:%.2d\n", encontro.horario.hora, encontro.horario.min);
+    printf("Descricao: %s\n\n", encontro.descricao);
 }
 
 void OpcaoExcluirEncontro()
@@ -1079,7 +1236,7 @@ void OpcaoExcluirEncontro()
             {
                 mensagemError(-10);
             }
-            system("cls");
+            CLS
         } while (indice < 0 || indice >= _numEncontros);
     }
     else
@@ -1089,7 +1246,7 @@ void OpcaoExcluirEncontro()
 
     do
     {
-        system("cls");
+        CLS
         exibeEncontro(_encontros[indice], indice);
 
         printf("\nConfirma a exclusao do encontro[%d] (S/N)? ", indice + 1);
@@ -1112,9 +1269,9 @@ void OpcaoExcluirEncontro()
         return;
     }
 
-    system("cls");
+    CLS
     printf("Encontro excluido com sucesso!\n");
-    system("pause");
+    SPAUSE
 }
 
 void excluirEncontro(int indice)
@@ -1135,30 +1292,26 @@ void salvarEncontros()
         mensagemError(-18);
     }
 
-    fprintf(eFile, "%d\n", _numEncontros);
     for (int i = 0; i < _numEncontros; i++)
     {
-        fprintf(eFile, "%d %d %d\n", _encontros[i].data.dia, _encontros[i].data.mes, _encontros[i].data.ano);
-        fprintf(eFile, "%d %d\n", _encontros[i].horario.hora, _encontros[i].horario.min);
+        fprintf(eFile, "%d;", _encontros[i].data.dia);
+        fprintf(eFile, "%d;", _encontros[i].data.mes);
+        fprintf(eFile, "%d;", _encontros[i].data.ano);
+        fprintf(eFile, "%d;", _encontros[i].horario.hora);
+        fprintf(eFile, "%d;",_encontros[i].horario.min);
 
-        fprintf(eFile, "%d\n", _encontros[i].numAmigos);
+        fprintf(eFile, "%d;", _encontros[i].local.id);
+        fprintf(eFile, "%s;", _encontros[i].descricao);
+
         for (int j = 0; j < _encontros[i].numAmigos; j++)
         {
-            fprintf(eFile, "%s %s\n", _encontros[i].amigos[j].nome, _encontros[i].amigos[j].apelido);
+            fprintf(eFile, "%d@", _encontros[i].amigos[j]->id);
         }
-        fprintf(eFile, "\n");
 
-        fprintf(eFile, "%s\n", _encontros[i].local.nome);
-
-        fprintf(eFile, "%d\n", _encontros[i].numCategorias);
         for (int k = 0; k < _encontros[i].numCategorias; k++)
         {
-            fprintf(eFile, "%s\n", _encontros[i].categorias[k].nome);
-            fprintf(eFile, "%d\n", _encontros[i].categorias[k].id);
+            fprintf(eFile, "%d#", _encontros[i].categorias[k].id);
         }
-        fprintf(eFile, "\n");
-
-        fprintf(eFile, "%s\n", _encontros[i].descricao);
 
         fprintf(eFile, "\n");
     }
@@ -1169,71 +1322,97 @@ void salvarEncontros()
 void carregarEncontros()
 {
     FILE *eFile = fopen("encontros.txt", "r");
-    char strAux[100];
+    char strAux[100], c;
+    int id, sep, i, j;
 
-    if (eFile == NULL)
-    {
-        return;
-    }
+    if(eFile){
+        i = 0;
+        sep = 0;
 
-    fscanf(eFile, "%d\n", &_numEncontros);
-    _encontros = (TEncontro *)malloc((_numEncontros + 1) * sizeof(TEncontro));
-    validaAlocacao(_encontros);
+        while(!feof(eFile)){
+            c = fgetc(eFile);
+            if(c != ';' && c != '@' && c != '#' && c != '\n' && c != EOF){
+                strAux[i] = c;
+                i++;
+            } else if(c == ';' || c == '@' || c == '#' || c == '\n'){
+                strAux[i] = '\0';
+                i = 0;
 
-    for (int i = 0; i < _numEncontros; i++)
-    {
-        fscanf(eFile, "%d %d %d\n", &_encontros[i].data.dia, &_encontros[i].data.mes, &_encontros[i].data.ano);
-        fscanf(eFile, "%d %d\n", &_encontros[i].horario.hora, &_encontros[i].horario.min);
+                if(c == ';'){
+                    if(sep == 0){
+                        if(_numEncontros == 0){
+                            _encontros = (TEncontro*)malloc(1 * sizeof(TEncontro));
+                        } else{
+                            _encontros = (TEncontro*)realloc(_encontros, (_numEncontros + 1) * sizeof(TEncontro));
+                        }
+                        validaAlocacao(_encontros);
 
-        fscanf(eFile, "%d\n", &_encontros[i].numAmigos);
-        _encontros[i].amigos = (TAmigo *)malloc((_encontros[i].numAmigos + 1) * sizeof(TAmigo));
+                        _encontros[_numEncontros].numAmigos = 0;
+                        _encontros[_numEncontros].numCategorias = 0;
 
-        for (int j = 0; j < _encontros[i].numAmigos; j++)
-        {
-            char strAux2[100];
-            fscanf(eFile, "%s %s\n", strAux, strAux2);
+                        _encontros[_numEncontros].data.dia = atoi(strAux);
+                        sep++;
+                    } else if(sep == 1){
+                        _encontros[_numEncontros].data.mes = atoi(strAux);
+                        sep++;
+                    } else if(sep == 2){
+                        _encontros[_numEncontros].data.ano = atoi(strAux);
+                        sep++;
+                    } else if(sep == 3){
+                        _encontros[_numEncontros].horario.hora = atoi(strAux);
+                        sep++;
+                    } else if(sep == 4){
+                        _encontros[_numEncontros].horario.min = atoi(strAux);
+                        sep++;
+                    } else if(sep == 5){
+                        id = atoi(strAux);
+                        _encontros[_numEncontros].local = _local[id];
+                        sep++;
+                    } else if(sep == 6){
+                        _encontros[_numEncontros].descricao = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                        validaAlocacao(_encontros[_numEncontros].descricao);
+                        strcpy(_encontros[_numEncontros].descricao, strAux);
+                        sep = 0;
+                    }
+                } else if(c == '@'){
+                    if(_encontros[_numEncontros].numAmigos == 0){
+                        _encontros[_numEncontros].amigos = (TAmigo**)malloc(1 * sizeof(TAmigo*));
+                    } else{
+                        _encontros[_numEncontros].amigos = (TAmigo**)realloc(_encontros[_numEncontros].amigos, (_encontros[_numEncontros].numAmigos + 1) * sizeof(TAmigo*));
+                    }
+                    validaAlocacao(_encontros[_numEncontros].amigos);
 
-            _encontros[i].amigos[j].nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-            validaAlocacao(_encontros[i].amigos[j].nome);
-            strcpy(_encontros[i].amigos[j].nome, strAux);
+                    id = atoi(strAux);
+                    j = _encontros[_numEncontros].numAmigos;
 
-            _encontros[i].amigos[j].apelido = (char *)malloc((strlen(strAux2) + 1) * sizeof(char));
-            validaAlocacao(_encontros[i].amigos[j].apelido);
-            strcpy(_encontros[i].amigos[j].apelido, strAux2);
+                    _encontros[_numEncontros].amigos[j] = &_amigos[id];
+                    _encontros[_numEncontros].numAmigos++;
+                } else if(c == '#'){
+                    if(_encontros[_numEncontros].numCategorias == 0){
+                        _encontros[_numEncontros].categorias = (TCategoria*)malloc(1 * sizeof(TCategoria));
+                    } else{
+                        _encontros[_numEncontros].categorias = (TCategoria*)realloc(_encontros[_numEncontros].categorias, (_encontros[_numEncontros].numCategorias + 1) * sizeof(TCategoria));
+                    }
+                    validaAlocacao(_encontros[_numEncontros].categorias);
+
+                    id = atoi(strAux);
+                    j = _encontros[_numEncontros].numCategorias;
+
+                    _encontros[_numEncontros].categorias[j] = _categorias[id];
+                    _encontros[_numEncontros].numCategorias++;
+                } else{
+                    sep = 0;
+                    _numEncontros++;
+                }
+            } 
         }
-        fscanf(eFile, "\n");
-
-        fscanf(eFile, "%s\n", strAux);
-        _encontros[i].local.nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-        validaAlocacao(_encontros[i].local.nome);
-        strcpy(_encontros[i].local.nome, strAux);
-
-        fscanf(eFile, "%d\n", &_encontros[i].numCategorias);
-        _encontros[i].categorias = (TCategoria *)malloc((_encontros[i].numCategorias) * sizeof(TCategoria));
-
-        for (int k = 0; k < _encontros[i].numCategorias; k++)
-        {
-            fscanf(eFile, "%s\n", strAux);
-            _encontros[i].categorias[k].nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-            validaAlocacao(_encontros[i].categorias[k].nome);
-            strcpy(_encontros[i].categorias[k].nome, strAux);
-
-            fscanf(eFile, "%d\n", &_encontros[i].categorias[k].id);
-        }
-        fscanf(eFile, "\n");
-
-        fgets(strAux, sizeof(strAux), eFile);
-        strAux[strcspn(strAux, "\n")] = 0;
-        _encontros[i].descricao = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-        validaAlocacao(_encontros[i].descricao);
-        strcpy(_encontros[i].descricao, strAux);
-
-        fscanf(eFile, "\n");
     }
 
     fclose(eFile);
 }
+/* <\ENCONTROS> */
 
+/* <CATEGORIAS> */
 void op_categoria()
 {
     int op;
@@ -1244,19 +1423,19 @@ void op_categoria()
         scanf("%d", &op);
         fflush(stdin);
 
-        system("cls");
+        CLS
         OpcaoMenuCategoria(op);
     } while (op != 4);
 }
 
 void menu_categoria()
 {
-    system("cls");
+    CLS
     printf("1. Incluir categoria\n");
     printf("2. Alterar categoria\n");
     printf("3. Excluir categoria\n");
     printf("4. Voltar\n\n");
-    printf("Digite a opcao: ");
+    printf("** Digite a opcao: ");
 }
 
 void OpcaoMenuCategoria(int op)
@@ -1304,7 +1483,7 @@ void alterarCategoria()
             {
                 mensagemError(-10);
             }
-            system("cls");
+            CLS
         } while (indice < 0 || indice >= _numCategorias);
     }
     else
@@ -1315,9 +1494,9 @@ void alterarCategoria()
     exibeCategoria(_categorias[indice], indice + 1);
     _categorias[indice] = criarCategoria();
 
-    system("cls");
+    CLS
     printf("Categoria alterada com sucesso!\n");
-    system("pause");
+    SPAUSE
 }
 
 void incluirCategoria()
@@ -1326,7 +1505,7 @@ void incluirCategoria()
 
     while (1)
     {
-        system("cls");
+        CLS
         if (_numCategorias == 0)
         {
             _categorias = (TCategoria *)malloc(1 * sizeof(TCategoria));
@@ -1340,7 +1519,7 @@ void incluirCategoria()
         _categorias[_numCategorias] = criarCategoria();
         _numCategorias++;
 
-        system("cls");
+        CLS
         printf("Categoria adcionada com sucesso!\n");
 
         printf("Deseja adcionar mias uma categoria (S/N)? ");
@@ -1402,7 +1581,7 @@ void OpcaoListarCategoria()
                 mensagemError(-9);
             }
         } while (op < 1 || op > 3);
-        system("cls");
+        CLS
 
         if (op == 1)
         {
@@ -1417,7 +1596,7 @@ void OpcaoListarCategoria()
                 fflush(stdin);
                 indice--;
 
-                system("cls");
+                CLS
                 if (indice >= 0 && indice <= _numCategorias)
                 {
                     printf("-- Lista de categorias [%d] --\n\n", indice + 1);
@@ -1439,12 +1618,12 @@ void OpcaoListarCategoria()
     {
         listarCategorias();
     }
-    system("pause");
+    SPAUSE
 }
 
 void listarCategorias()
 {
-    system("cls");
+    CLS
     printf("-- Lista de categorias [%d] --\n\n", _numCategorias);
     for (int i = 0; i < _numCategorias; i++)
     {
@@ -1460,11 +1639,11 @@ void exibeCategoria(TCategoria categoria, int indice)
 
 void menuListarCategoria()
 {
-    system("cls");
+    CLS
     printf("1. Exibir TODAS as categorias\n");
     printf("2. Exibir APENAS UMA categoria\n");
     printf("3. Voltar\n\n");
-    printf("Digite a opcao: ");
+    printf("** Digite a opcao: ");
 }
 
 void OpcaoExcluirCategoria()
@@ -1492,7 +1671,7 @@ void OpcaoExcluirCategoria()
             {
                 mensagemError(-10);
             }
-            system("cls");
+            CLS
         } while (indice < 0 || indice >= _numCategorias);
     }
     else
@@ -1502,7 +1681,7 @@ void OpcaoExcluirCategoria()
 
     do
     {
-        system("cls");
+        CLS
         exibeCategoria(_categorias[indice], indice);
 
         printf("\nConfirma a exclusao da categoria[%d] (S/N)? ", indice + 1);
@@ -1526,7 +1705,7 @@ void OpcaoExcluirCategoria()
                 {
                     mensagemError(-17);
                     printf("Categoria adicionada ao encontro: [%d]\n\n", i + 1);
-                    system("pause");
+                    SPAUSE
                     return;
                 }
             }
@@ -1539,9 +1718,9 @@ void OpcaoExcluirCategoria()
 
     excluirCategoria(indice);
 
-    system("cls");
+    CLS
     printf("Categoria excluida com sucesso!\n");
-    system("pause");
+    SPAUSE
 }
 
 void excluirCategoria(int indice)
@@ -1549,6 +1728,7 @@ void excluirCategoria(int indice)
     for (int i = indice; i < _numCategorias; i++)
     {
         _categorias[i] = _categorias[i + 1];
+        _categorias[i].id--;
     }
     _numCategorias--;
 }
@@ -1562,44 +1742,69 @@ void salvarCategorias()
         mensagemError(-18);
     }
 
-    fprintf(cFile, "%d\n", _numCategorias);
     for (int i = 0; i < _numCategorias; i++)
     {
-        fprintf(cFile, "%s\n", _categorias[i].nome);
-        fprintf(cFile, "%d %d\n", _categorias[i].id, _categorias[i].numEncontros);
+        fprintf(cFile, "%s;", _categorias[i].nome);
+        fprintf(cFile, "%d;%d;", _categorias[i].id, _categorias[i].numEncontros);
+        fprintf(cFile, "\n");
     }
-    fprintf(cFile, "\n");
 
     fclose(cFile);
 }
 
 void carregarCategorias()
 {
+    char strAux[100], c;
+    int sep, i;
+
+
     FILE *cFile = fopen("categorias.txt", "r");
-    char strAux[100];
+    if(cFile){
+        i = 0;
+        sep = 0;
 
-    if (cFile == NULL)
-    {
-        return;
+        while(!feof(cFile)){
+            c = fgetc(cFile);
+            if(c != ';' && c != '\n' && c != EOF){
+                strAux[i] = c;
+                i++;
+            } else if(c == ';' || c == '\n'){
+                strAux[i] = '\0';
+                i = 0;
+
+                if(c == ';'){
+                    if(sep == 0){
+                        if(_numCategorias == 0){
+                            _categorias = (TCategoria*)malloc(1 * sizeof(TCategoria));
+                        } else{
+                            _categorias = (TCategoria*)realloc(_categorias, (_numCategorias + 1) * sizeof(TCategoria));
+                        }
+                        validaAlocacao(_categorias);
+
+                        _categorias[_numCategorias].nome = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                        validaAlocacao(_categorias[_numCategorias].nome);
+                        strcpy(_categorias[_numCategorias].nome, strAux);
+                        sep++;
+                    } else if(sep == 1){
+                        _categorias[_numCategorias].id = atoi(strAux);
+                        sep++;
+                    } else if(sep == 2){
+                        _categorias[_numCategorias].numEncontros = atoi(strAux);
+                        sep++;
+                    }
+                } else if(c == '\n'){
+                    sep = 0;
+                    _numCategorias++;
+                }
+            }
+        }
     }
-
-    fscanf(cFile, "%d\n", &_numCategorias);
-    _categorias = (TCategoria *)malloc((_numCategorias + 1) * sizeof(TCategoria));
-    validaAlocacao(_categorias);
-
-    for (int i = 0; i < _numCategorias; i++)
-    {
-        fscanf(cFile, "%s\n", strAux);
-        _categorias[i].nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-        strcpy(_categorias[i].nome, strAux);
-
-        fscanf(cFile, "%d %d\n", &_categorias[i].id, &_categorias[i].numEncontros);
-    }
-    fscanf(cFile, "\n");
 
     fclose(cFile);
 }
+/* </CATEGORIAS> */
 
+/* <LOCAIS> */
 void op_local()
 {
     int op;
@@ -1610,20 +1815,20 @@ void op_local()
         scanf("%d", &op);
         fflush(stdin);
 
-        system("cls");
+        CLS
         OpcaoMenuLocal(op);
     } while (op != 4);
 }
 
 void menu_local()
 {
-    system("cls");
+    CLS
     printf("-- Manter local --\n");
     printf("- (1) Incluir local\n");
     printf("- (2) Alterar local\n");
     printf("- (3) Excluir local\n");
     printf("- (4) Voltar\n\n");
-    printf("Digite a opcao: ");
+    printf("** Digite a opcao: ");
 }
 
 void incluirLocal()
@@ -1640,9 +1845,9 @@ void incluirLocal()
 
     _local[_numLocais++] = criarLocal();
 
-    system("cls");
+    CLS
     printf("Local adcionado com sucesso!\n");
-    system("pause");
+    SPAUSE
 }
 
 TLocal criarLocal()
@@ -1675,7 +1880,11 @@ TLocal criarLocal()
         printf("Digite o numero: ");
         scanf("%d", &local.endereco.numero);
         fflush(stdin);
-    } while (local.endereco.numero);
+
+        if(local.endereco.numero < 0){
+            mensagemError(-23);
+        }
+    } while(local.endereco.numero < 0);
 
     local.id = _numLocais;
 
@@ -1706,7 +1915,7 @@ void OpcaoAlterarLocal()
             {
                 mensagemError(-9);
             }
-            system("cls");
+            CLS
         } while (indice < 0 || indice >= _numLocais);
     }
     else
@@ -1723,8 +1932,8 @@ void menuAlterarLocal(int indice)
 
     do
     {
-        system("cls");
-        printf("-- Lista de locais [%d] --\n", indice);
+        CLS
+        printf("-- Lista de locais [%d] --\n", indice + 1);
         exibeLocal(_local[indice]);
 
         printf("Digite o atributo a alterar\n");
@@ -1734,11 +1943,11 @@ void menuAlterarLocal(int indice)
         printf("- (4) Bairro\n");
         printf("- (5) Numero\n");
         printf("- (6) Voltar\n\n");
-        printf("Digite a opcao: ");
+        printf("** Digite a opcao: ");
         scanf("%d", &op);
         fflush(stdin);
 
-        system("cls");
+        CLS
         alterarLocal(op, indice);
     } while (op != 6);
 }
@@ -1752,7 +1961,6 @@ void alterarLocal(int op, int indice)
     case 1:
         printf("Digite o novo nome do local: ");
         gets(strAux);
-
         _local[indice].nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
         strcpy(_local[indice].nome, strAux);
         break;
@@ -1780,7 +1988,11 @@ void alterarLocal(int op, int indice)
         {
             printf("Digite o novo numero: ");
             scanf("%d", &_local[indice].endereco.numero);
-        } while (_local[indice].endereco.numero);
+
+            if(_local[indice].endereco.numero < 0){
+                mensagemError(-23);
+            }
+        } while(_local[indice].endereco.numero < 0);
         break;
     case 6:
         return;
@@ -1789,9 +2001,9 @@ void alterarLocal(int op, int indice)
         break;
     }
 
-    system("cls");
+    CLS
     printf("Local alterado com sucesso!\n");
-    system("pause");
+    SPAUSE
 }
 
 void OpcaoExcluirLocal()
@@ -1819,7 +2031,7 @@ void OpcaoExcluirLocal()
             {
                 mensagemError(-10);
             }
-            system("cls");
+            CLS
         } while (indice < 0 || indice >= _numLocais);
     }
     else
@@ -1829,7 +2041,7 @@ void OpcaoExcluirLocal()
 
     do
     {
-        system("cls");
+        CLS
         exibeLocal(_local[indice]);
 
         printf("Confirma a exclusao do local[%d] (S/N)? ", indice + 1);
@@ -1851,7 +2063,7 @@ void OpcaoExcluirLocal()
             {
                 mensagemError(-2);
                 printf("Local adicionado ao encontro: [%d]\n\n", i + 1);
-                system("pause");
+                SPAUSE
                 return;
             }
         }
@@ -1863,18 +2075,18 @@ void OpcaoExcluirLocal()
 
     excluirLocal(indice);
 
-    system("cls");
+    CLS
     printf("Local excluido com sucesso!\n");
-    system("pause");
+    SPAUSE
 }
 
 void menuExcluirLocais()
 {
-    system("cls");
+    CLS
     printf("- (1) Excluir APENAS UM local\n");
     printf("- (2) Excluir TODOS os locais\n");
     printf("- (3) Voltar\n\n");
-    printf("Digite a opcao: ");
+    printf("** Digite a opcao: ");
 }
 
 void excluirLocal(int indice)
@@ -1882,6 +2094,7 @@ void excluirLocal(int indice)
     for (int i = indice; i < _numLocais; i++)
     {
         _local[i] = _local[i + 1];
+        _local[i].id--;
     }
     _numLocais--;
 }
@@ -1909,7 +2122,7 @@ void OpcaoListarLocal()
                 mensagemError(-9);
             }
         } while (op < 1 || op > 3);
-        system("cls");
+        CLS
 
         if (op == 1)
         {
@@ -1924,7 +2137,7 @@ void OpcaoListarLocal()
                 fflush(stdin);
                 indice--;
 
-                system("cls");
+                CLS
                 if (indice >= 0 && indice <= _numLocais)
                 {
                     printf("-- Lista de Locais [%d] --\n\n", indice + 1);
@@ -1945,21 +2158,21 @@ void OpcaoListarLocal()
     {
         listarLocais();
     }
-    system("pause");
+    SPAUSE
 }
 
 void menuListarLocal()
 {
-    system("cls");
+    CLS
     printf("1. Exibir TODOS os locais\n");
     printf("2. Exibir APENAS UM local\n");
     printf("3. Voltar\n\n");
-    printf("Digite a opcao: ");
+    printf("** Digite a opcao: ");
 }
 
 void listarLocais()
 {
-    system("cls");
+    CLS
     printf("-- Lista de locais [%d] --\n\n", _numLocais);
     for (int i = 0; i < _numLocais; i++)
     {
@@ -1976,15 +2189,14 @@ void salvarLocais()
         mensagemError(-18);
     }
 
-    fprintf(lFile, "%d\n", _numLocais);
     for (int i = 0; i < _numLocais; i++)
     {
-        fprintf(lFile, "%s\n", _local[i].nome);
-        fprintf(lFile, "%s\n", _local[i].endereco.bairro);
-        fprintf(lFile, "%s\n", _local[i].endereco.cidade);
-        fprintf(lFile, "%s\n", _local[i].endereco.logradouro);
-        fprintf(lFile, "%d\n", _local[i].endereco.numero);
-        fprintf(lFile, "%d\n", _local[i].id);
+        fprintf(lFile, "%s;", _local[i].nome);
+        fprintf(lFile, "%s;", _local[i].endereco.bairro);
+        fprintf(lFile, "%s;", _local[i].endereco.cidade);
+        fprintf(lFile, "%s;", _local[i].endereco.logradouro);
+        fprintf(lFile, "%d;", _local[i].endereco.numero);
+        fprintf(lFile, "%d;", _local[i].id);
         fprintf(lFile, "\n");
     }
 
@@ -1993,45 +2205,67 @@ void salvarLocais()
 
 void carregarLocais()
 {
+    char strAux[100], c;
+    int sep, i;
+
     FILE *lFile = fopen("locais.txt", "r");
-    char strAux[100];
 
-    if (lFile == NULL)
-    {
-        return;
-    }
+    if(lFile){
+        i = 0;
+        sep = 0;
 
-    fscanf(lFile, "%d\n", &_numLocais);
-    _local = (TLocal *)malloc((_numLocais + 1) * sizeof(TLocal));
-    validaAlocacao(_local);
+        while(!feof(lFile)){
+            c = fgetc(lFile);
+            if(c != ';' && c != '\n' && c != EOF){
+                strAux[i] = c;
+                i++;
+            } else if(c == ';' || c == '\n' || c == EOF){
+                strAux[i] = '\0';
+                i = 0;
 
-    for (int i = 0; i < _numLocais; i++)
-    {
-        fscanf(lFile, "%s\n", strAux);
-        _local[i].nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-        validaAlocacao(_local[i].nome);
-        strcpy(_local[i].nome, strAux);
+                if(c == ';'){
+                    if(sep == 0){
+                        if(_numLocais == 0){
+                            _local = (TLocal*)malloc(1 * sizeof(TLocal));
+                        } else{
+                            _local = (TLocal*)realloc(_local, (_numLocais + 1) * sizeof(TLocal));
+                        }
+                        validaAlocacao(_local);
 
-        fscanf(lFile, "%s\n", strAux);
-        _local[i].endereco.bairro = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-        validaAlocacao(_local[i].endereco.bairro);
-        strcpy(_local[i].endereco.bairro, strAux);
-
-        fscanf(lFile, "%s\n", strAux);
-        _local[i].endereco.cidade = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-        validaAlocacao(_local[i].endereco.cidade);
-        strcpy(_local[i].endereco.cidade, strAux);
-
-        fscanf(lFile, "%s\n", strAux);
-        _local[i].endereco.logradouro = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-        validaAlocacao(_local[i].endereco.logradouro);
-        strcpy(_local[i].endereco.logradouro, strAux);
-
-        fscanf(lFile, "%d\n", &_local[i].endereco.numero);
-
-        fscanf(lFile, "%d\n", &_local[i].id);
-
-        fscanf(lFile, "\n");
+                        _local[_numLocais].nome = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                        validaAlocacao(_local[_numLocais].nome);
+                        strcpy(_local[_numLocais].nome, strAux);
+                        sep++;
+                    } else if(sep == 1){
+                        _local[_numLocais].endereco.bairro = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                        validaAlocacao(_local[_numLocais].endereco.bairro);
+                        strcpy(_local[_numLocais].endereco.bairro, strAux);
+                        sep++;
+                    } else if(sep == 2){
+                        _local[_numLocais].endereco.cidade = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                        validaAlocacao(_local[_numLocais].endereco.cidade);
+                        strcpy(_local[_numLocais].endereco.cidade, strAux);
+                        sep++;
+                    } else if(sep == 3){
+                        _local[_numLocais].endereco.logradouro = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                        validaAlocacao(_local[_numLocais].endereco.logradouro);
+                        strcpy(_local[_numLocais].endereco.logradouro, strAux);
+                        sep++;
+                    } else if(sep == 4){
+                        _local[_numLocais].endereco.numero = atoi(strAux);
+                        sep++;
+                    } else if(sep == 5){
+                        _local[_numLocais].id = atoi(strAux);
+                        sep++;
+                    } else{
+                        sep = 0;
+                    }
+                } else if(c == '\n'){
+                    sep = 0;
+                    _numLocais++;
+                }
+            }
+        }
     }
 
     fclose(lFile);
@@ -2066,7 +2300,9 @@ void OpcaoMenuLocal(int op)
         break;
     }
 }
+/* <\LOCAIS> */
 
+/* <AMIGOS> */
 void op_amigo()
 {
     int op;
@@ -2077,20 +2313,20 @@ void op_amigo()
         scanf("%d", &op);
         fflush(stdin);
 
-        system("cls");
+        CLS
         OpcaoMenuAmigo(op);
     } while (op != 4);
 }
 
 void menu_amigo()
 {
-    system("cls");
+    CLS
     printf("-- Manter amigo --\n");
     printf("- (1) Incluir amigo\n");
     printf("- (2) Alterar amigo\n");
     printf("- (3) Excluir amigo\n");
     printf("- (4) Voltar\n\n");
-    printf("Digite a opcao: ");
+    printf("** Digite a opcao: ");
 }
 
 void OpcaoMenuAmigo(int op)
@@ -2128,9 +2364,9 @@ void incluirAmigo()
 
     _amigos[_numAmigos++] = criarAmigo();
 
-    system("cls");
+    CLS
     printf("Amigo adicionado com sucesso!\n");
-    system("pause");
+    SPAUSE
 }
 
 TAmigo criarAmigo()
@@ -2138,10 +2374,27 @@ TAmigo criarAmigo()
     char strAux[100];
     TAmigo amigo;
 
-    printf("Digite o nome do amigo: ");
-    gets(strAux);
-    amigo.nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-    strcpy(amigo.nome, strAux);
+    while(1){
+        int check = 1;
+
+        printf("Digite o nome do amigo: ");
+        gets(strAux);
+        amigo.nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+        strcpy(amigo.nome, strAux);
+
+        for(int i = 0; i < _numAmigos; i++){
+            if(strcmp(_amigos[i].nome, amigo.nome) == 0){
+                check = 0;
+                break;
+            }
+        }
+        
+        if(check){
+            break;
+        } else{
+            mensagemError(-24);
+        }
+    }
 
     printf("Digite o apelido do amigo: ");
     gets(strAux);
@@ -2197,7 +2450,7 @@ void OpcaoListarAmigo()
                 mensagemError(-9);
             }
         } while (op < 1 || op > 3);
-        system("cls");
+        CLS
 
         if (op == 1)
         {
@@ -2214,7 +2467,7 @@ void OpcaoListarAmigo()
 
                 if (indice >= 0 && indice <= _numAmigos)
                 {
-                    system("cls");
+                    CLS
                     printf("-- Lista de amigos [%d] --\n\n", indice + 1);
                     exibeAmigo(_amigos[indice], indice);
                 }
@@ -2233,21 +2486,21 @@ void OpcaoListarAmigo()
     {
         listarAmigos();
     }
-    system("pause");
+    SPAUSE
 }
 
 void menuListarAmigo()
 {
-    system("cls");
+    CLS
     printf("1. Exibir TODOS os amigos\n");
     printf("2. Exibir APENAS UM amigo\n");
     printf("3. Voltar\n\n");
-    printf("Digite a opcao: ");
+    printf("** Digite a opcao: ");
 }
 
 void listarAmigos()
 {
-    system("cls");
+    CLS
     printf("-- Lista de amigos [%d] --\n\n", _numAmigos);
     for (int i = 0; i < _numAmigos; i++)
     {
@@ -2261,6 +2514,7 @@ void exibeAmigo(TAmigo amigo, int indice)
     printf("Nome: %s\n", amigo.nome);
     printf("Apelido: %s\n", amigo.apelido);
     printf("Email: %s\n", amigo.email);
+    printf("Data de nascimento: %.2d/%.2d/%d\n", amigo.nasc.dia, amigo.nasc.mes, amigo.nasc.ano);
     printf("Telefone: +%c%c (%c%c) %c%c%c%c%c-%c%c%c%c\n\n", amigo.telefone[0], amigo.telefone[1], amigo.telefone[2], amigo.telefone[3], amigo.telefone[4], amigo.telefone[5], amigo.telefone[6], amigo.telefone[7], amigo.telefone[8], amigo.telefone[9], amigo.telefone[10], amigo.telefone[11], amigo.telefone[12]);
 }
 
@@ -2288,9 +2542,9 @@ void OpcaoExcluirAmigo()
             if (indice < 0 || indice >= _numAmigos)
             {
                 mensagemError(-9);
-                system("pause");
+                SPAUSE
             }
-            system("cls");
+            CLS
         } while (indice < 0 || indice >= _numAmigos);
     }
     else
@@ -2300,7 +2554,7 @@ void OpcaoExcluirAmigo()
 
     do
     {
-        system("cls");
+        CLS
         exibeAmigo(_amigos[indice], indice);
 
         printf("Confirma a exclusao do amigo[%d] (S/N)? ", indice + 1);
@@ -2311,7 +2565,7 @@ void OpcaoExcluirAmigo()
         if (op != 's' && op != 'n')
         {
             mensagemError(-9);
-            system("pause");
+            SPAUSE
         }
     } while (op != 's' && op != 'n');
 
@@ -2325,9 +2579,9 @@ void OpcaoExcluirAmigo()
         return;
     }
 
-    system("cls");
+    CLS
     printf("Amigo excluido com sucesso!\n");
-    system("pause");
+    SPAUSE
 }
 
 void excluirAmigo(int indice)
@@ -2335,6 +2589,7 @@ void excluirAmigo(int indice)
     for (int i = indice; i < _numAmigos; i++)
     {
         _amigos[i] = _amigos[i + 1];
+        _amigos[i].id--;
     }
     _numAmigos--;
 }
@@ -2352,7 +2607,7 @@ void excluirAmigoDeEncontros(int indice)
     {
         for (j = 0; j < _encontros[i].numAmigos; j++)
         {
-            if (_encontros[i].amigos[j].id == _amigos[indice].id)
+            if (_encontros[i].amigos[j]->id == _amigos[indice].id)
             {
                 aux = 1;
                 break;
@@ -2405,7 +2660,7 @@ void OpcaoAlterarAmigo()
             {
                 mensagemError(-9);
             }
-            system("cls");
+            CLS
         } while (indice < 0 || indice >= _numAmigos);
     }
     else
@@ -2432,12 +2687,12 @@ void MenuAlterarAmigo(int indice)
         printf("- (4) Email\n");
         printf("- (5) Numero\n");
         printf("- (6) Voltar\n\n");
-        printf("Digite a opcao: ");
+        printf("** Digite a opcao: ");
         scanf("%d", &op);
         fflush(stdin);
 
         alterarAmigo(op, indice);
-        system("cls");
+        CLS
     } while (op != 6);
 }
 
@@ -2490,9 +2745,9 @@ void alterarAmigo(int op, int indice)
         return;
     }
 
-    system("cls");
+    CLS
     printf("Amigo alterado com sucesso!\n");
-    system("pause");
+    SPAUSE
 }
 
 void salvarAmigos()
@@ -2504,16 +2759,14 @@ void salvarAmigos()
         mensagemError(-18);
     }
 
-    fprintf(aFile, "%d\n", _numAmigos);
-
     for (int i = 0; i < _numAmigos; i++)
     {
-        fprintf(aFile, "%s\n", _amigos[i].nome);
-        fprintf(aFile, "%s\n", _amigos[i].apelido);
-        fprintf(aFile, "%d %d %d\n", _amigos[i].nasc.dia, _amigos[i].nasc.mes, _amigos[i].nasc.ano);
-        fprintf(aFile, "%s\n", _amigos[i].email);
-        fprintf(aFile, "%s\n", _amigos[i].telefone);
-        fprintf(aFile, "%d\n", _amigos[i].id);
+        fprintf(aFile, "%s;", _amigos[i].nome);
+        fprintf(aFile, "%s;", _amigos[i].apelido);
+        fprintf(aFile, "%d;%d;%d;", _amigos[i].nasc.dia, _amigos[i].nasc.mes, _amigos[i].nasc.ano);
+        fprintf(aFile, "%s;", _amigos[i].email);
+        fprintf(aFile, "%s;", _amigos[i].telefone);
+        fprintf(aFile, "%d;", _amigos[i].id);
         fprintf(aFile, "\n");
     }
 
@@ -2522,71 +2775,144 @@ void salvarAmigos()
 
 void carregarAmigos()
 {
+    int sep, i;
+    char strAux[100], c;
+
     // Abertura de arquivo
     FILE *aFile = fopen("amigos.txt", "r");
-    char strAux[100];
+    if(aFile){
+        i = 0;
+        sep = 0;
 
-    if (aFile == NULL)
-    {
-        return;
+        while(!feof(aFile)){
+            c = fgetc(aFile);
+            if(c != ';' && c != '\n' && c != EOF){
+                strAux[i] = c;
+                i++;
+            } else if(c == ';' || c == '\n'){
+                strAux[i] = '\0';
+                i = 0;
+
+                if(c == ';'){
+                    if(sep == 0){
+                        if(_numAmigos == 0){
+                            _amigos = (TAmigo*)malloc(1 * sizeof(TAmigo));
+                        } else{
+                            _amigos = (TAmigo*)realloc(_amigos, (_numAmigos + 1) * sizeof(TAmigo));
+                        }
+                        validaAlocacao(_amigos);
+
+                        _amigos[_numAmigos].nome = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                        validaAlocacao(_amigos[_numAmigos].nome);
+                        strcpy(_amigos[_numAmigos].nome, strAux);
+                        sep++;
+                    } else if(sep == 1){
+                        _amigos[_numAmigos].apelido = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                        validaAlocacao(_amigos[_numAmigos].apelido);
+                        strcpy(_amigos[_numAmigos].apelido, strAux);
+                        sep++;
+                    } else if(sep == 2){
+                        _amigos[_numAmigos].nasc.dia = atoi(strAux);
+                        sep++;
+                    } else if(sep == 3){
+                        _amigos[_numAmigos].nasc.mes = atoi(strAux);
+                        sep++;
+                    } else if(sep == 4){
+                        _amigos[_numAmigos].nasc.ano = atoi(strAux);
+                        sep++;
+                    } else if(sep == 5){
+                        _amigos[_numAmigos].email = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                        validaAlocacao(_amigos[_numAmigos].email);
+                        strcpy(_amigos[_numAmigos].email, strAux);
+                        sep++;
+                    } else if(sep == 6){
+                        strcpy(_amigos[_numAmigos].telefone, strAux);
+                        sep++;
+                    } else if(sep == 7){
+                        _amigos[_numAmigos].id = atoi(strAux);
+                        sep = 0;
+                    }
+                } else{
+                    sep = 0;
+                    _numAmigos++;
+                }
+            }   
+        }
     }
-
-    fscanf(aFile, "%d\n", &_numAmigos);
-    _amigos = (TAmigo *)malloc((_numAmigos + 1) * sizeof(TAmigo));
-    validaAlocacao(_amigos);
-
-    for (int i = 0; i < _numAmigos; i++)
-    {
-        fscanf(aFile, "%s\n", strAux);
-        _amigos[i].nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-        strcpy(_amigos[i].nome, strAux);
-        validaAlocacao(_amigos[i].nome);
-
-        fscanf(aFile, "%s\n", strAux);
-        _amigos[i].apelido = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-        strcpy(_amigos[i].apelido, strAux);
-        validaAlocacao(_amigos[i].apelido);
-
-        fscanf(aFile, "%d %d %d\n", &_amigos[i].nasc.dia, &_amigos[i].nasc.mes, &_amigos[i].nasc.ano);
-
-        fscanf(aFile, "%s\n", strAux);
-        _amigos[i].email = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-        validaAlocacao(_amigos[i].email);
-        strcpy(_amigos[i].email, strAux);
-
-        fscanf(aFile, "%s\n", _amigos[i].telefone);
-
-        fscanf(aFile, "%d\n", &_amigos[i].id);
-
-        fscanf(aFile, "\n");
-    }
-
-    // Fechamento de arquivo
     fclose(aFile);
 }
+/* <\AMIGOS> */
 
-void digitarTitulo()
+/* <MANIPULAÇÃO DE ARQUIVOS E MEMÓRIA> */
+void enviaDados()
 {
-    char *palavra = "Hello World!";
-
-    system("cls");
-    for (int i = 0; palavra[i] != '\0'; i++)
-    {
-        printf("%c", palavra[i]);
-        Sleep(70);
-    }
-    Sleep(700);
-    palavra = "-- Lista de Encontros --";
-
-    system("cls");
-    for (int i = 0; palavra[i] != '\0'; i++)
-    {
-        printf("%c", palavra[i]);
-        Sleep(70);
-    }
-    printf("\n");
+    salvarAmigos();
+    salvarLocais();
+    salvarCategorias();
+    salvarEncontros();
 }
 
+void carregarDados()
+{
+    carregarAmigos();
+    carregarCategorias();
+    carregarLocais();
+    carregarEncontros();
+}
+
+void limparMemoria()
+{
+    limparAmigos();
+    limparCategorias();
+    limparLocais();
+    limparEncontros();
+}
+
+void limparAmigos()
+{
+    for (int i = 0; i < _numAmigos; i++)
+    {
+        free(_amigos[i].nome);
+        free(_amigos[i].apelido);
+        free(_amigos[i].email);
+    }
+    free(_amigos);
+}
+
+void limparCategorias()
+{
+    for (int i = 0; i < _numCategorias; i++)
+    {
+        free(_categorias[i].nome);
+    }
+    free(_categorias);
+}
+
+void limparLocais()
+{
+    for (int i = 0; i < _numLocais; i++)
+    {
+        free(_local[i].nome);
+        free(_local[i].endereco.bairro);
+        free(_local[i].endereco.cidade);
+        free(_local[i].endereco.logradouro);
+    }
+    free(_local);
+}
+
+void limparEncontros()
+{
+    for (int i = 0; i < _numEncontros; i++)
+    {
+        free(_encontros[i].amigos);
+        free(_encontros[i].categorias);
+        free(_encontros[i].descricao);
+    }
+    free(_encontros);
+}
+/* <\MANIPULAÇÃO DE ARQUIVOS E MEMÓRIA> */
+
+/* <CONTROLE DE ERROS> */
 int validarEmail(char *email)
 {
     int countA = 0, countB = 0, x = 0;
@@ -2610,6 +2936,22 @@ int validarEmail(char *email)
     }
 
     return x;
+}
+
+int validarLocal(TLocal local){
+    int check = 0;
+
+    for(int i = 0; i < _numLocais; i++){
+        if(strcmp(local.nome, _local[i].nome) == 0 && strcmp(local.endereco.bairro, _local[i].endereco.bairro) == 0 && strcmp(local.endereco.cidade, _local[i].endereco.cidade) == 0 && strcmp(local.endereco.logradouro, _local[i].endereco.logradouro) == 0 && local.endereco.numero == _local[i].endereco.numero){
+            check = 1;
+        }
+    }
+
+    if(check){
+        mensagemError(-25);
+    }
+
+    return check;    
 }
 
 int validarTelefone(char *telefone)
@@ -2709,76 +3051,9 @@ void validaAlocacao(void *ptr)
     }
 }
 
-void salvarDados()
-{
-    salvarAmigos();
-    salvarCategorias();
-    salvarLocais();
-    salvarEncontros();
-}
-
-void carregarDados()
-{
-    carregarAmigos();
-    carregarCategorias();
-    carregarLocais();
-    carregarEncontros();
-}
-
-void limparMemoria()
-{
-    limparAmigos();
-    limparCategorias();
-    limparLocais();
-    limparEncontros();
-}
-
-void limparAmigos()
-{
-    for (int i = 0; i < _numAmigos; i++)
-    {
-        free(_amigos[i].nome);
-        free(_amigos[i].apelido);
-        free(_amigos[i].email);
-    }
-    free(_amigos);
-}
-
-void limparCategorias()
-{
-    for (int i = 0; i < _numCategorias; i++)
-    {
-        free(_categorias[i].nome);
-    }
-    free(_categorias);
-}
-
-void limparLocais()
-{
-    for (int i = 0; i < _numLocais; i++)
-    {
-        free(_local[i].nome);
-        free(_local[i].endereco.bairro);
-        free(_local[i].endereco.cidade);
-        free(_local[i].endereco.logradouro);
-    }
-    free(_local);
-}
-
-void limparEncontros()
-{
-    for (int i = 0; i < _numEncontros; i++)
-    {
-        free(_encontros[i].amigos);
-        free(_encontros[i].categorias);
-        free(_encontros[i].descricao);
-    }
-    free(_encontros);
-}
-
 void mensagemError(int codigoErro)
 {
-    system("cls");
+    CLS
     switch (codigoErro)
     {
     case -1:
@@ -2847,11 +3122,21 @@ void mensagemError(int codigoErro)
     case -22:
         printf("ERRO: Categoria ja inclusa neste encontro!!!\n");
         break;
+    case -23:
+        printf("ERRO: Numero invalido!!!\n");
+        break;
+    case -24:
+        printf("ERRO: Amigo ja cadastrado!!!\n");
+        break;
+    case -25:
+        printf("ERRO: Local ja cadastrado!!!\n");
+        break;
     default:
         printf("UNKNOWN ERROR!!!\n");
         exit(1);
     }
 
-    system("pause");
+    SPAUSE
     printf("\n");
 }
+/* <\CONTROLE DE ERROS> */

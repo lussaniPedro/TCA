@@ -1,8 +1,2 @@
-1
-Cabare
-Centro
-Paranagua
-Av123
-1294
-0
-
+Cabare;Centro;Paranagua;Av. 123;69;0;
+Cinema;Centro;Paranagua;Rua 77;1294;1;

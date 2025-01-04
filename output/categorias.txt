@@ -1,10 +1,4 @@
-4
-Jantar
-0 0
-Almoco
-1 0
-Cinema
-2 1
-Resenha
-3 2
-
+Jantar;0;0;
+Almoco;1;0;
+Cinema;2;1;
+Resenha;3;2;
