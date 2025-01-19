@@ -197,16 +197,16 @@ void validaAlocacao(void *ptr);                              // Valida a alocaç
 void ERRO(int codigoErro);                                   // Exibe uma mensagem de erro
 
 /* <Declaração de variáveis globais> */
-TAmigo *_amigos;
+TAmigo *_amigos = NULL;
 int _numAmigos = 0;
 
-TLocal *_local;
+TLocal *_local = NULL;
 int _numLocais = 0;
 
-TCategoria *_categorias;
+TCategoria *_categorias = NULL;
 int _numCategorias = 0;
 
-TEncontro *_encontros;
+TEncontro *_encontros = NULL;
 int _numEncontros = 0;
     
 /* <PRINCIPAL */
