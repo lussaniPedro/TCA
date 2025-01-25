@@ -197,16 +197,16 @@ void validaAlocacao(void *ptr);                              // Valida a alocaç
 void ERRO(int codigoErro);                                   // Exibe uma mensagem de erro
 
 /* <Declaração de variáveis globais> */
-TAmigo *_amigos;
+TAmigo *_amigos = NULL;
 int _numAmigos = 0;
 
-TLocal *_local;
+TLocal *_local = NULL;
 int _numLocais = 0;
 
-TCategoria *_categorias;
+TCategoria *_categorias = NULL;
 int _numCategorias = 0;
 
-TEncontro *_encontros;
+TEncontro *_encontros = NULL;
 int _numEncontros = 0;
     
 /* <PRINCIPAL */
@@ -214,7 +214,7 @@ int main()
 {
     int op;
     digitarTitulo();
-    carregarDados();
+    // carregarDados();
 
     do
     {
@@ -964,7 +964,7 @@ void alterarEncontro(int op, int indice)
         do{
             printf("Digite o novo horario do encontro: ");
             scanf("%d%d", &_encontros[indice].horario.hora, &_encontros[indice].horario.min);
-        } while(validarHorarioEncontro(_encontros[indice].horario.hora, _encontros[indice].horario.min));
+        } while(validarHorario(_encontros[indice].horario.hora, _encontros[indice].horario.min));
         break;
     case 3:
         MenuAlterarAtributo(indice, 1);
@@ -3399,6 +3399,7 @@ void limparAmigos()
         free(_amigos[i].nome);
         free(_amigos[i].apelido);
         free(_amigos[i].email);
+        free(_amigos[i].telefone);
     }
     free(_amigos);
 }
@@ -3417,8 +3418,9 @@ void limparLocais()
     for (int i = 0; i < _numLocais; i++)
     {
         free(_local[i].nome);
-        free(_local[i].endereco.bairro);
+        free(_local[i].endereco.estado);
         free(_local[i].endereco.cidade);
+        free(_local[i].endereco.bairro);
         free(_local[i].endereco.logradouro);
     }
     free(_local);
@@ -3430,6 +3432,7 @@ void limparEncontros()
     {
         free(_encontros[i].amigos);
         free(_encontros[i].categorias);
+        free(_encontros[i].local);
         free(_encontros[i].descricao);
     }
     free(_encontros);
@@ -3536,7 +3539,7 @@ int validarNascimento(int dia, int mes, int ano)
 {
     int x = 0;
 
-    if (ano <= 1925)
+    if (ano <= 1925 || ano > 2025)
     {
         x = 1;
     }
@@ -3583,18 +3586,35 @@ int validarNascimento(int dia, int mes, int ano)
 int validarDataEncontro(int dia, int mes, int ano){
     int x = 0;
 
-    if (ano <= 1925)
+    if (ano <= 2024)
     {
         x = 1;
     }
-    else if ((mes <= 0) || (mes >= 2))
+    else if ((mes <= 0) || (mes > 12))
     {
         x = 1;
     }
 
-    if (mes == 2 && dia > 6)
+    if (mes == 2)
     {
-        x = 1;
+        if (ano % 4 == 0)
+        {
+            if (dia > 29)
+            {
+               x = 1;
+            }
+        }
+        else if (dia > 28)
+        {
+            x = 1;
+        }
+    }
+    else if ((mes == 4) || (mes == 6) || (mes == 9) || (mes == 11))
+    {
+        if (dia > 30)
+        {
+            x = 1;
+        }
     }
     else if ((dia > 31) || (dia <= 0))
     {
