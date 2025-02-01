@@ -8,3 +8,4 @@ Nycollas;Grelo;28;12;2009;grelo.Math@ifpr.edu.br;5541926378218;6;
 Caroline;Carol;4;1;2009;ferreira.carol@yahoo.com;5541984625464;7;
 Miguel;Penis;16;8;2008;miguel.1234@ava.com;5541997832011;8;
 Nickole;Nic;14;1;2009;LiaNic@gmail.com;5541123456789;9;
+Yasmim;Mimim;29;5;2008;yasmym13machadodesouza@gmail.com;5541992805751;10;
