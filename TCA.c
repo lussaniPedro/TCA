@@ -161,7 +161,7 @@ void incluirAmigosEmEncontros(int indice);               // Inclui amigos em um 
 void alterarAmigosDeEncontros(int indice);               // Altera amigos de um encontro
 void OpAlterarCategoriasDeEncontros(int op, int indice); // Dispara a opção para alterar categorias de um encontro
 void OpExcluirCategoriasDeEncontro(int indice);          // Dispara a opção para excluir categorias de um encontro
-void excluirCateoriasDeEncontro(int index, int indice);  // Exclui categorias de um encontro
+void excluirCategoriasDeEncontro(int index, int indice);  // Exclui categorias de um encontro
 void listarCategoriasDeEncontros(int indice);            // Lista todas as categorias de um encontro
 void incluirCategoriasEmEncontros(int indice);           // Inclui categorias em um encontro
 void alterarCategoriasDeEncontros(int indice);           // Altera categorias de um encontro
@@ -201,6 +201,7 @@ void rereferenciarCategorias(); // Rereferencia os dados das categorias
 /* Controle de erros */
 int validarEmail(char *email);                      // Valida um e-mail
 int validarTelefone(char *telefone);                // Valida um número de telefone
+int validarNome(char *nome);                        // Valida se um nome possui apenas caracteres alfabéticos
 int validarLocal(TLocal local);                     // Valida um local
 int validarNascimento(int dia, int mes, int ano);   // Valida dia mês e ano do nascimento
 int validarDataEncontro(int dia, int mes, int ano); // Valida data de criação do encontro
@@ -223,7 +224,7 @@ int _numCategorias = 0;
 TEncontro *_encontros = NULL;
 int _numEncontros = 0;
 
-/* <PRINCIPAL */
+/* <PRINCIPAL> */
 int main(){
     int op;
     digitarTitulo();
@@ -238,7 +239,7 @@ int main(){
         op_menu(op);
     } while (op != 6);
 
-    // enviaDados();
+    enviaDados();
     limparMemoria();
     return 0;
 }
@@ -300,7 +301,7 @@ void op_menu(int op)
 
 void digitarTitulo()
 {
-    char *palavra = "Hello world";
+    char *palavra = "Hello world!";
 
     CLS for (int i = 0; palavra[i] != '\0'; i++)
     {
@@ -309,7 +310,8 @@ void digitarTitulo()
     }
     Sleep(700);
 
-    for (int i = 0; i < 12; i++)
+    int tam = strlen(palavra);
+    for (int i = 0; i < tam; i++)
     {
         printf("\b \b"); // Apaga a palavra
         Sleep(70);
@@ -1677,14 +1679,14 @@ void OpExcluirCategoriasDeEncontro(int indice)
         return;
     }
 
-    excluirAmigoDeEncontro(index, indice);
+    excluirCategoriasDeEncontro(index, indice);
 
     CLS
         printf("Categoria excluida com sucesso\n");
     SPAUSE
 }
 
-void excluirCateoriasDeEncontro(int index, int indice)
+void excluirCategoriasDeEncontro(int index, int indice)
 {
     for (int i = index; i < _encontros[indice].numCategorias; i++)
     {
@@ -1699,6 +1701,7 @@ void excluirCateoriasDeEncontro(int index, int indice)
     validaAlocacao(_encontros[indice].categoriasID);
 
     _encontros[indice].numCategorias--;
+    _categorias[index].numEncontros--;
 }
 
 void listarCategoriasDeEncontros(int indice)
@@ -2026,7 +2029,7 @@ void carregarEncontros()
                     {
                         id = atoi(strAux);
                         _encontros[_numEncontros].local = &_local[id];
-                        _encontros[_numEncontros].localID = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                        _encontros[_numEncontros].localID = (char*)malloc((strlen(_local[id].nome) + 1) * sizeof(char));
                         validaAlocacao(_encontros[_numEncontros].localID);
                         strcpy(_encontros[_numEncontros].localID, _local[id].nome);
                         sep++;
@@ -2059,7 +2062,7 @@ void carregarEncontros()
 
                     _encontros[_numEncontros].amigos[j] = &_amigos[id];
 
-                    _encontros[_numEncontros].amigosID[j] = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                    _encontros[_numEncontros].amigosID[j] = (char*)malloc((strlen(_amigos[id].nome) + 1) * sizeof(char));
                     validaAlocacao(_encontros[_numEncontros].amigosID[j]);
                     strcpy(_encontros[_numEncontros].amigosID[j], _amigos[id].nome);
 
@@ -2085,7 +2088,7 @@ void carregarEncontros()
 
                     _encontros[_numEncontros].categorias[j] = &_categorias[id];
 
-                    _encontros[_numEncontros].categoriasID[j] = (char*)malloc((strlen(strAux) + 1) * sizeof(char));
+                    _encontros[_numEncontros].categoriasID[j] = (char*)malloc((strlen(_categorias[id].nome) + 1) * sizeof(char));
                     validaAlocacao(_encontros[_numEncontros].categoriasID[j]);
                     strcpy(_encontros[_numEncontros].categoriasID[j], _categorias[id].nome);
 
@@ -2322,9 +2325,14 @@ TCategoria criarCategoria()
 
     while (1)
     {
-        CLS int check = 1;
-        printf("Digite o nome da categoria: ");
-        gets(strAux);
+        CLS 
+        int check = 1;
+
+        do{
+            printf("Digite o nome da categoria: ");
+            gets(strAux);
+        } while (validarNome(strAux));
+
         categoria.nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
         strcpy(categoria.nome, strAux);
 
@@ -2712,8 +2720,12 @@ TLocal criarLocal()
     do
     {
         CLS
+
+        do{
             printf("Digite o nome do local: ");
-        gets(strAux);
+            gets(strAux);
+        } while(validarNome(strAux));
+
         local.nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
         strcpy(local.nome, strAux);
 
@@ -2830,8 +2842,11 @@ void alterarLocal(int op, int indice)
     switch (op)
     {
     case 1:
-        printf("Digite o novo nome do local: ");
-        gets(strAux);
+        do{
+            printf("Digite o novo nome do local: ");
+            gets(strAux);
+        } while(validarNome(strAux));
+
         _local[indice].nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
         strcpy(_local[indice].nome, strAux);
         break;
@@ -3324,10 +3339,12 @@ TAmigo criarAmigo()
     {
         int check = 1;
 
-        printf("Digite o nome do amigo: ");
-        gets(strAux);
-        amigo.nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-        strcpy(amigo.nome, strAux);
+        do{
+            printf("Digite o nome do amigo: ");
+            gets(strAux);
+            amigo.nome = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+            strcpy(amigo.nome, strAux);
+        } while(validarNome(amigo.nome));
 
         for (int i = 0; i < _numAmigos; i++)
         {
@@ -3346,14 +3363,16 @@ TAmigo criarAmigo()
         {
             ERRO(-18);
             SPAUSE
-            printf("\n");
+            printf("\n\n");
         }
     }
 
-    printf("Digite o apelido do amigo: ");
-    gets(strAux);
-    amigo.apelido = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
-    strcpy(amigo.apelido, strAux);
+    do{
+        printf("Digite o apelido do amigo: ");
+        gets(strAux);
+        amigo.apelido = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
+        strcpy(amigo.apelido, strAux);
+    } while(validarNome(amigo.apelido));
 
     do
     {
@@ -3683,14 +3702,17 @@ void alterarAmigo(int op, int indice)
         {
             check = 1;
 
-            printf("Digite o novo nome do amigo: ");
-            gets(strAux);
+            do{
+                printf("Digite o novo nome do amigo: ");
+                gets(strAux);
+            } while (validarNome(strAux));
 
             for (int i = 0; i < _numAmigos; i++)
             {
                 if (strcmp(_amigos[i].nome, strAux) == 0)
                 {
                     check = 0;
+                    break;
                 }
             }
 
@@ -3698,9 +3720,8 @@ void alterarAmigo(int op, int indice)
             {
                 break;
             } 
-            else
-            {
-                ERRO(-19);
+            else {
+                ERRO(-18);
                 SPAUSE
                 printf("\n");   
             }
@@ -3710,8 +3731,11 @@ void alterarAmigo(int op, int indice)
         strcpy(_amigos[indice].nome, strAux);
         break;
     case 2:
-        printf("Digite o novo apelido do amigo: ");
-        gets(strAux);
+        do{
+            printf("Digite o novo apelido do amigo: ");
+            gets(strAux);
+        } while (validarNome(strAux));
+
         _amigos[indice].apelido = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
         strcpy(_amigos[indice].apelido, strAux);
         break;
@@ -3729,6 +3753,7 @@ void alterarAmigo(int op, int indice)
             printf("Digite o novo email do amigo: ");
             gets(strAux);
         } while (validarEmail(strAux));
+
         _amigos[indice].email = (char *)malloc((strlen(strAux) + 1) * sizeof(char));
         strcpy(_amigos[indice].email, strAux);
         break;
@@ -3737,7 +3762,7 @@ void alterarAmigo(int op, int indice)
         {
             printf("Digite o numero de telefone do amigo: ");
             gets(_amigos[indice].telefone);
-        } while (validarTelefone(_amigos[indice].telefone) == 1);
+        } while (validarTelefone(_amigos[indice].telefone));
         break;
     case 6:
         return;
@@ -3979,6 +4004,24 @@ int validarEmail(char *email)
     }
 
     return x;
+}
+
+int validarNome(char *nome){
+    int check = 0;
+
+    for(int i = 0; nome[i] != '\0'; i++){
+        if(!isalpha(nome[i]) && !isspace(nome[i])){
+            check = 1;
+        }
+    }
+
+    if(check){
+        ERRO(-25);
+        SPAUSE
+        printf("\n\n");
+    }
+
+    return check;
 }
 
 int validarLocal(TLocal local)
@@ -4283,6 +4326,9 @@ void ERRO(int codigoErro)
         break;
     case -24:
         printf("ERRO: Data do encontro invalida!!!\n");
+        break;
+    case -25:
+        printf("ERRO: O nome deve conter apenas letras!!!\n");
         break;
     default:
         printf("UNKNOWN ERROR!!!\n\n");
