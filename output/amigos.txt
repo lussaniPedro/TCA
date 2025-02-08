@@ -9,3 +9,8 @@ Caroline;Carol;4;1;2009;ferreira.carol@yahoo.com;5541984625464;7;
 Miguel;Penis;16;8;2008;miguel.1234@ava.com;5541997832011;8;
 Nickole;Nic;14;1;2009;LiaNic@gmail.com;5541123456789;9;
 Yasmim;Mimim;29;5;2008;yasmym13machadodesouza@gmail.com;5541992805751;10;
+Augusto M.;Arbusto;3;3;2025;augusto.mitsugui@gmail.com;5541996977616;11;
+Maria Fernanda;Mafer;5;1;2009;mariamachado@gmail.com;5541996007130;12;
+Fatality;AllBlack;1;1;2009;fatality@gmail.com;4112998765432;12;
+Eloiza;Toga;11;1;2008;eloizaoswald.carvalho@gmail.com;5541992769711;14;
+Vitoria;vic;7;8;2008;vivisantos1288@gmail.com;5541999509543;15;
