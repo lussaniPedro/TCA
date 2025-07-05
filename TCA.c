@@ -1024,8 +1024,8 @@ void MenuAlterarEncontro(int indice)
         printf("- (1) Data\n");
         printf("- (2) Horario\n");
         printf("- (3) Amigos\n");
-        printf("- (4) Categorias\n");
-        printf("- (5) Local\n");
+        printf("- (4) Local\n");
+        printf("- (5) Categorias\n");
         printf("- (6) Descricao\n");
         printf("- (7) Voltar para o menu anterior\n\n");
         printf("** Digite a opcao: ");
@@ -1186,7 +1186,7 @@ void alterarLocalDeEncontro(int indice)
         fflush(stdin);
 
         op = tolower(op);
-    } while (validaSimNao(op));
+    } while (!validaSimNao(op));
 
     if (op == 'n')
     {
